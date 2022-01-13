@@ -1,6 +1,6 @@
 ---
 title: "Biostat 203B Homework 1"
-author: Kuan-Hung Yeh
+author: Kuan-Hung Yeh (UID:705669455)
 subtitle: Due Jan 21 @ 11:59PM
 output: html_document
 ---
@@ -35,18 +35,39 @@ This exercise (and later in this course) uses the [MIMIC-IV data](https://mimic-
 ## Q3. Linux Shell Commands
 
 1. The `/mnt/mimiciv/1.0` folder on teaching server contains data sets from MIMIC-IV. Refer to the documentation <https://mimic.mit.edu/docs/iv/> for details of data files.  
-    ```{bash}
-    ls -l /mnt/mimiciv/1.0
-    ```
+```{bash}
+ls -l /mnt/mimiciv/1.0
+```
 Please, do **not** put these data files into Git; they are big. Do **not** copy them into your directory. Do **not** decompress the gz data files. These create unnecessary big files on storage and are not big data friendly practices. Just read from the data folder `/mnt/mimiciv/1.0` directly in following exercises. 
 
     Use Bash commands to answer following questions.
 
 2. Display the contents in the folders `core`, `hosp`, `icu`. Why are these data files distributed as `.csv.gz` files instead of `.csv` (comma separated values) files? Read the page <https://mimic.mit.edu/docs/iv/> to understand what's in each folder.
+```{bash}
+ls -l /mnt/mimiciv/1.0/core
+```
+```{bash}
+ls -l /mnt/mimiciv/1.0/hosp
+```
+```{bash}
+ls -l /mnt/mimiciv/1.0/icu
+```
+
+As we know that csv.gz files are the CSV file compressed with gzip utility. The reason why those data distributed as .csv.gz files are because they are too large. In order to reduce the size of files, they used compressed file type csv.gz
 
 3. Briefly describe what bash commands `zcat`, `zless`, `zmore`, and `zgrep` do.
 
+#man zcat
+'The zcat command allows the user to expand and view a compressed file without uncompressing that file.'
+#man zless
+'Zless is a filter which allows examination of compressed or plain text files one screenful at a time on a soft-copy terminal.'
+#man zmore
+'Zmore command is a handy utility that lets you view gzipped files one screen at a time (much like the more command) without first decompressing them.'
+#man zgrep
+'Zgrep command is used to search out expressions from a given a file even if it is compressed.'
+
 4. What's the output of following bash script?
+Listing all the csv.gz files contents in /mnt/mimiciv/1.0/core/*.gz directory. 
     ```{bash, eval=F}
     for datafile in /mnt/mimiciv/1.0/core/*.gz
       do
@@ -55,9 +76,50 @@ Please, do **not** put these data files into Git; they are big. Do **not** copy 
     ```
 Display the number of lines in each data file using a similar loop.
 
+    ```{bash, eval=F}
+    for datafile in /mnt/mimiciv/1.0/core/*.gz
+      do
+        wc -l $datafile
+      done
+    ```
 5. Display the first few lines of `admissions.csv.gz`. How many rows are in this data file? How many unique patients (identified by `subject_id`) are in this data file? (Hint: combine Linux commands `zcat`, `head`/`tail`, `awk`, `sort`, `uniq`, `wc`, and so on.)
-
+```{bash, eval=F}
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | head
+#Display the first few lines of `admissions.csv.gz`.
+```
+```{bash, eval=F}
+wc -l /mnt/mimiciv/1.0/core/admissions.csv.gz
+#There are 66155 rows in this data file.
+```
+```{bash, eval=F}
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $1}' | sort | uniq | wc -l
+#There are 256879 unique patients (identified by `subject_id`) in this data file
+```
 6. What are the possible values taken by each of the variable `admission_type`, `admission_location`, `insurance`, and `ethnicity`? Also report the count for each unique value of these variables. (Hint: combine Linux commands `zcat`, `head`/`tail`, `awk`, `uniq -c`, `wc`, and so on.)
+```{bash, eval=F}
+#admission_type
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $6}' | sort | uniq -c | wc -l
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $6}' | sort | uniq -c | head -10
+#There are 9 unique admission_type value (identified by `admission_type`) in this data file
+```
+```{bash, eval=F}
+#admission_location
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $7}' | sort | uniq -c | wc -l
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $7}' | sort | uniq -c | head -13
+#There are 12 unique admission_location value (identified by `admission_location`) in this data file
+```
+```{bash, eval=F}
+#insurance
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $9}' | sort | uniq -c | wc -l
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $9}' | sort | uniq -c | head
+#There are 3 unique insurance value (identified by `insurance`) in this data file
+```
+```{bash, eval=F}
+#ethnicity
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $12}' | sort | uniq -c | wc -l
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $12}' | sort | uniq -c | head
+#There are 8 unique ethnicity value (identified by `ethnicity`) in this data file
+```
 
 ## Q4. Who's popular in Price and Prejudice
 
