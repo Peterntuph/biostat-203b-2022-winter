@@ -92,33 +92,42 @@ wc -l /mnt/mimiciv/1.0/core/admissions.csv.gz
 #There are 66155 rows in this data file.
 ```
 ```{bash, echo=T}
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $1}' | sort | uniq | wc -l
-#There are 256879 unique patients (identified by `subject_id`) in this data file
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $1}' | sort |
+uniq | wc -l
+#There are 256879 unique patients in this data file
 ```
 6. What are the possible values taken by each of the variable `admission_type`, `admission_location`, `insurance`, and `ethnicity`? Also report the count for each unique value of these variables. (Hint: combine Linux commands `zcat`, `head`/`tail`, `awk`, `uniq -c`, `wc`, and so on.)
 ```{bash, echo=T}
 #admission_type
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $6}' | sort | uniq -c | wc -l
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $6}' | sort | uniq -c | head -10
-#There are 9 unique admission_type value (identified by `admission_type`) in this data file
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $6}' | sort |
+uniq -c | wc -l
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $6}' | sort |
+uniq -c | head -10
+#There are 9 unique admission_type value in this data file
 ```
 ```{bash, echo=T}
 #admission_location
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $7}' | sort | uniq -c | wc -l
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $7}' | sort | uniq -c | head -13
-#There are 12 unique admission_location value (identified by `admission_location`) in this data file
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $7}' | sort |
+uniq -c | wc -l
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $7}' | sort |
+uniq -c | head -13
+#There are 12 unique admission_location value in this data file
 ```
 ```{bash, echo=T}
 #insurance
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $9}' | sort | uniq -c | wc -l
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $9}' | sort | uniq -c | head
-#There are 3 unique insurance value (identified by `insurance`) in this data file
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $9}' | sort |
+uniq -c | wc -l
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $9}' | sort |
+uniq -c | head
+#There are 3 unique insurance value in this data file
 ```
 ```{bash, echo=T}
 #ethnicity
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $12}' | sort | uniq -c | wc -l
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $12}' | sort | uniq -c | head
-#There are 8 unique ethnicity value (identified by `ethnicity`) in this data file
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $12}' | sort |
+uniq -c | wc -l
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $12}' | sort |
+uniq -c | head
+#There are 8 unique ethnicity value in this data file
 ```
 
 ## Q4. Who's popular in Price and Prejudice
