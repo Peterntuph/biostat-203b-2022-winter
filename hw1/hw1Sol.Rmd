@@ -133,16 +133,19 @@ uniq -c | head
 ## Q4. Who's popular in Price and Prejudice
 
 1. You and your friend just have finished reading *Pride and Prejudice* by Jane Austen. Among the four main characters in the book, Elizabeth, Jane, Lydia, and Darcy, your friend thinks that Darcy was the most mentioned. You, however, are certain it was Elizabeth. Obtain the full text of the novel from <http://www.gutenberg.org/cache/epub/42671/pg42671.txt> and save to your local folder. 
-    ```{bash, eval=FALSE}
+    ```{bash, echo=T}
     wget -nc http://www.gutenberg.org/cache/epub/42671/pg42671.txt
+    #Wget is the non-interactive network downloader which is used to download 
+    #files from the server even when the user has not logged on to the system 
+    #and it can work in the background without hindering the current process.
     ```
 Explain what `wget -nc` does. Do **not** put this text file `pg42671.txt` in Git. Complete the following loop to tabulate the number of times each of the four characters is mentioned using Linux commands.
-    ```{bash, eval=FALSE}
+    ```{bash, echo=T}
     wget -nc http://www.gutenberg.org/cache/epub/42671/pg42671.txt
     for char in Elizabeth Jane Lydia Darcy
     do
       echo $char:
-      grep $char | wc -l
+      grep $char pg42671.txt | wc -l
     done
     ```
 
@@ -154,6 +157,8 @@ Explain what `wget -nc` does. Do **not** put this text file `pg42671.txt` in Git
     ```{bash eval=FALSE}
     echo 'hello, world' >> test2.txt
     ```
+For the first command, it directs 'hello, world' from command to test1.txt.
+However, for the second, it appends 'hello, world' from command to test1.txt.
 
 3. Using your favorite text editor (e.g., `vi`), type the following and save the file as `middle.sh`:
     ```{bash eval=FALSE}

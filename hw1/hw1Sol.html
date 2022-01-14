@@ -281,16 +281,19 @@ pre code {
 <pre class="bash"><code>wc -l /mnt/mimiciv/1.0/core/admissions.csv.gz
 #There are 66155 rows in this data file.</code></pre>
 <pre><code>## 66155 /mnt/mimiciv/1.0/core/admissions.csv.gz</code></pre>
-<pre class="bash"><code>zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{print $1}&#39; | sort | uniq | wc -l
-#There are 256879 unique patients (identified by `subject_id`) in this data file</code></pre>
+<pre class="bash"><code>zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{print $1}&#39; | sort |
+uniq | wc -l
+#There are 256879 unique patients in this data file</code></pre>
 <pre><code>## 256879</code></pre>
 <ol start="6" style="list-style-type: decimal">
 <li>What are the possible values taken by each of the variable <code>admission_type</code>, <code>admission_location</code>, <code>insurance</code>, and <code>ethnicity</code>? Also report the count for each unique value of these variables. (Hint: combine Linux commands <code>zcat</code>, <code>head</code>/<code>tail</code>, <code>awk</code>, <code>uniq -c</code>, <code>wc</code>, and so on.)</li>
 </ol>
 <pre class="bash"><code>#admission_type
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{print $6}&#39; | sort | uniq -c | wc -l
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{print $6}&#39; | sort | uniq -c | head -10
-#There are 9 unique admission_type value (identified by `admission_type`) in this data file</code></pre>
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{print $6}&#39; | sort |
+uniq -c | wc -l
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{print $6}&#39; | sort |
+uniq -c | head -10
+#There are 9 unique admission_type value in this data file</code></pre>
 <pre><code>## 10
 ##       1 admission_type
 ##    7254 AMBULATORY OBSERVATION
@@ -303,9 +306,11 @@ zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{print $6}&#39; | so
 ##   41074 SURGICAL SAME DAY ADMISSION
 ##   47930 URGENT</code></pre>
 <pre class="bash"><code>#admission_location
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{print $7}&#39; | sort | uniq -c | wc -l
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{print $7}&#39; | sort | uniq -c | head -13
-#There are 12 unique admission_location value (identified by `admission_location`) in this data file</code></pre>
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{print $7}&#39; | sort |
+uniq -c | wc -l
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{print $7}&#39; | sort |
+uniq -c | head -13
+#There are 12 unique admission_location value in this data file</code></pre>
 <pre><code>## 13
 ##   60435 
 ##       1 admission_location
@@ -321,18 +326,22 @@ zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{print $7}&#39; | so
 ##    4063 TRANSFER FROM SKILLED NURSING FACILITY
 ##   16660 WALK-IN/SELF REFERRAL</code></pre>
 <pre class="bash"><code>#insurance
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{print $9}&#39; | sort | uniq -c | wc -l
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{print $9}&#39; | sort | uniq -c | head
-#There are 3 unique insurance value (identified by `insurance`) in this data file</code></pre>
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{print $9}&#39; | sort |
+uniq -c | wc -l
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{print $9}&#39; | sort |
+uniq -c | head
+#There are 3 unique insurance value in this data file</code></pre>
 <pre><code>## 4
 ##       1 insurance
 ##   50850 Medicaid
 ##  171360 Medicare
 ##  301530 Other</code></pre>
 <pre class="bash"><code>#ethnicity
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{print $12}&#39; | sort | uniq -c | wc -l
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{print $12}&#39; | sort | uniq -c | head
-#There are 8 unique ethnicity value (identified by `ethnicity`) in this data file</code></pre>
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{print $12}&#39; | sort |
+uniq -c | wc -l
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{print $12}&#39; | sort |
+uniq -c | head
+#There are 8 unique ethnicity value in this data file</code></pre>
 <pre><code>## 9
 ##    1535 AMERICAN INDIAN/ALASKA NATIVE
 ##   24506 ASIAN
@@ -348,18 +357,33 @@ zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{print $12}&#39; | s
 <h2>Q4. Who’s popular in Price and Prejudice</h2>
 <ol style="list-style-type: decimal">
 <li><p>You and your friend just have finished reading <em>Pride and Prejudice</em> by Jane Austen. Among the four main characters in the book, Elizabeth, Jane, Lydia, and Darcy, your friend thinks that Darcy was the most mentioned. You, however, are certain it was Elizabeth. Obtain the full text of the novel from <a href="http://www.gutenberg.org/cache/epub/42671/pg42671.txt" class="uri">http://www.gutenberg.org/cache/epub/42671/pg42671.txt</a> and save to your local folder.</p>
-<pre class="bash"><code>wget -nc http://www.gutenberg.org/cache/epub/42671/pg42671.txt</code></pre>
+<pre class="bash"><code>wget -nc http://www.gutenberg.org/cache/epub/42671/pg42671.txt
+#Wget is the non-interactive network downloader which is used to download 
+#files from the server even when the user has not logged on to the system 
+#and it can work in the background without hindering the current process.</code></pre>
+<pre><code>## File ‘pg42671.txt’ already there; not retrieving.</code></pre>
 <p>Explain what <code>wget -nc</code> does. Do <strong>not</strong> put this text file <code>pg42671.txt</code> in Git. Complete the following loop to tabulate the number of times each of the four characters is mentioned using Linux commands.</p>
 <pre class="bash"><code>wget -nc http://www.gutenberg.org/cache/epub/42671/pg42671.txt
 for char in Elizabeth Jane Lydia Darcy
 do
   echo $char:
-  # some commands here
-done</code></pre></li>
+  grep $char pg42671.txt | wc -l
+done</code></pre>
+<pre><code>## File ‘pg42671.txt’ already there; not retrieving.
+## 
+## Elizabeth:
+## 633
+## Jane:
+## 290
+## Lydia:
+## 166
+## Darcy:
+## 414</code></pre></li>
 <li><p>What’s the difference between the following two commands?</p>
 <pre class="bash"><code>echo &#39;hello, world&#39; &gt; test1.txt</code></pre>
 <p>and</p>
-<pre class="bash"><code>echo &#39;hello, world&#39; &gt;&gt; test2.txt</code></pre></li>
+<pre class="bash"><code>echo &#39;hello, world&#39; &gt;&gt; test2.txt</code></pre>
+<p>For the first command, it directs ‘hello, world’ from command to test1.txt. However, for the second, it appends ‘hello, world’ from command to test1.txt.</p></li>
 <li><p>Using your favorite text editor (e.g., <code>vi</code>), type the following and save the file as <code>middle.sh</code>:</p>
 <pre class="bash"><code>#!/bin/sh
 # Select lines from the middle of a file.
