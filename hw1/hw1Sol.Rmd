@@ -10,7 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 Display machine information for reproducibility:
-```{r, eval=F}
+```{r, echo=TRUE}
 sessionInfo()
 ```
 
@@ -31,6 +31,10 @@ sessionInfo()
 ## Q2. Data ethics training
 
 This exercise (and later in this course) uses the [MIMIC-IV data](https://mimic-iv.mit.edu), a freely accessible critical care database developed by the MIT Lab for Computational Physiology. Follow the instructions at <https://mimic.mit.edu/docs/gettingstarted/> to (1) complete the CITI `Data or Specimens Only Research` course and (2) obtain the PhysioNet credential for using the MIMIC-IV data. Display the verification links to your completion report and completion certificate here. (Hint: The CITI training takes a couple hours and the PhysioNet credentialing takes a couple days; do not leave it to the last minute.)
+
+Verification links:
+[completion report](www.citiprogram.org/verify/?ka3709a6c-2c5e-48e2-96f4-b5d4b5d73122-46525347)
+[completion certificate](www.citiprogram.org/verify/?w5b2ce486-632e-4483-8bc5-7ef810042545-46525347)
 
 ## Q3. Linux Shell Commands
 
@@ -169,20 +173,134 @@ head -n "$2" "$1" | tail -n "$3"
 ```
 
 ```{bash, echo=T}
-vi ./middle.sh # then copy and paste the content
+#vi ./middle.sh 
+# then copy and paste the content
 ```
 Using `chmod` make the file executable by the owner, and run 
 ```{bash, echo=T}
-chmod 751 ./middle.sh
+chmod 751 /home/khyeh0816/biostat-203b-2022-winter/middle.sh
 ls -al
 #-rwxr-x--x.  1 khyeh0816 khyeh0816  124 Jan 14 23:42 middle.sh
 ```
 
-```{bash eval=FALSE}
-./middle.sh pg42671.txt 20 5
+```{bash, echo=T}
+/home/khyeh0816/biostat-203b-2022-winter/middle.sh pg42671.txt 20 5
+#head -n 20 pg42671.txt | tail -n 5
 ```
 Explain the output. Explain the meaning of `"$1"`, `"$2"`, and `"$3"` in this shell script. Why do we need the first line of the shell script?
+
+The output for this command prints author and editor for *Pride and Prejudice*.
+For the `"$1"`, `"$2"`, and `"$3"` in this shell script, `"$1"` means that the
+filename of this command (In this scenario is *pg42671.txt*). For the `"$2"`, it
+means that the end_line for this file which is number 20th rows in this case.
+For the `"$3"`, it shows that how many lines we wants in this case is 5 lines.
+Thus, the command above is just same as I wrote below:
+```{bash, echo=T}
+head -n 20 pg42671.txt | tail -n 5
+```
+Lastly, the reason why we need first line of the shell script (#!/bin/sh) is 
+because we would like to make the script always be run with sh,
+rather than another shell.
 
 ### Q5. More fun with Linux
 
 Try following commands in Bash and interpret the results: `cal`, `cal 2021`, `cal 9 1752` (anything unusual?), `date`, `hostname`, `arch`, `uname -a`, `uptime`, `who am i`, `who`, `w`, `id`, `last | head`, `echo {con,pre}{sent,fer}{s,ed}`, `time sleep 5`, `history | tail`.
+```{bash, echo=T}
+cal
+```
+For this result, cal means that printing the calender for this month (Jan, 2022)
+
+```{bash, echo=T}
+cal 2021
+```
+For this result, cal 2021 means that printing the calender for last whole year
+(2021).
+
+```{bash, echo=T}
+cal 9 1752
+```
+For this result, cal 9 1752 means that printing the calender for September 1752.
+The unusual thing is that the date 3rd to 13th are missing for this calender.
+
+```{bash, echo=T}
+date
+```
+For this result, date means that printing the date and time right now.
+
+```{bash, echo=T}
+hostname
+```
+For this result, hostname means that printing DNS(Domain Name System) name now.
+
+```{bash, echo=T}
+arch
+```
+For this result, arch means that printing the computer architecture now.
+
+```{bash, echo=T}
+uname -a
+```
+For this result, uname -a means that printing System information used right now.
+
+```{bash, echo=T}
+uptime
+```
+For this result, uptime returns information about how long your system has been 
+running together with the current time, number of users with running sessions, 
+and the system load averages for the past 1, 5, and 15 minutes. 
+
+```{bash, echo=T}
+whoami
+```
+For this result, whoami returns information about current username.
+
+```{bash, echo=T}
+who
+```
+For this result, who command lets you display the users currently logged in to 
+your UNIX or Linux operating system.
+
+```{bash, echo=T}
+w
+```
+For this result, w commmand used to show who is logged on and 
+what they are doing.
+
+```{bash, echo=T}
+id
+```
+For this result, id commmand used to show your current ID for this system.
+
+```{bash, echo=T}
+last | head
+```
+For this result, last | head used to display top 10 (head) the list of all the 
+users logged in and out.
+
+```{bash, echo=T}
+echo {con,pre}{sent,fer}{s,ed}
+```
+For this result, echo command used to display line of text/string that are 
+passed as an argument. In this case, it shows the permutations for the words 
+inside those three braces.
+
+```{bash, echo=T}
+time sleep 5
+```
+For this result, time sleep command used to delay for a fixed amount of time 
+during the execution of any script.
+
+```{bash, echo=T}
+history | tail
+```
+
+The history command shows a list of the commands entered since you started 
+the session.
+
+
+
+
+
+
+
+
