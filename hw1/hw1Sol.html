@@ -211,7 +211,7 @@ pre code {
 <div id="q2.-data-ethics-training" class="section level2">
 <h2>Q2. Data ethics training</h2>
 <p>This exercise (and later in this course) uses the <a href="https://mimic-iv.mit.edu">MIMIC-IV data</a>, a freely accessible critical care database developed by the MIT Lab for Computational Physiology. Follow the instructions at <a href="https://mimic.mit.edu/docs/gettingstarted/" class="uri">https://mimic.mit.edu/docs/gettingstarted/</a> to (1) complete the CITI <code>Data or Specimens Only Research</code> course and (2) obtain the PhysioNet credential for using the MIMIC-IV data. Display the verification links to your completion report and completion certificate here. (Hint: The CITI training takes a couple hours and the PhysioNet credentialing takes a couple days; do not leave it to the last minute.)</p>
-<p>Verification links: <a href="www.citiprogram.org/verify/?ka3709a6c-2c5e-48e2-96f4-b5d4b5d73122-46525347">completion report</a> <a href="www.citiprogram.org/verify/?w5b2ce486-632e-4483-8bc5-7ef810042545-46525347">completion certificate</a></p>
+<p>Verification links: <br> completion report &lt;www.citiprogram.org/verify/?ka3709a6c-2c5e-48e2-96f4-b5d4b5d73122-46525347&gt; <br> completion certificate &lt;www.citiprogram.org/verify/?w5b2ce486-632e-4483-8bc5-7ef810042545-46525347&gt; <br> PhysioNet credential <a href="https://drive.google.com/file/d/1yIJfb0cJrOzLICmkzgp5q3jr3Whr8GK9/view?usp=sharing" class="uri">https://drive.google.com/file/d/1yIJfb0cJrOzLICmkzgp5q3jr3Whr8GK9/view?usp=sharing</a></p>
 </div>
 <div id="q3.-linux-shell-commands" class="section level2">
 <h2>Q3. Linux Shell Commands</h2>
@@ -425,11 +425,11 @@ head -n &quot;$2&quot; &quot;$1&quot; | tail -n &quot;$3&quot;</code></pre>
 <pre class="bash"><code>chmod 751 /home/khyeh0816/biostat-203b-2022-winter/middle.sh
 ls -al
 #-rwxr-x--x.  1 khyeh0816 khyeh0816  124 Jan 14 23:42 middle.sh</code></pre>
-<pre><code>## total 1476
-## drwxrwxr-x. 2 khyeh0816 khyeh0816   4096 Jan 15 01:03 .
-## drwxr-xr-x. 5 khyeh0816 khyeh0816   4096 Jan 14 23:53 ..
-## -rw-rw-r--. 1 khyeh0816 khyeh0816 756845 Jan 15 01:03 hw1Sol.html
-## -rw-rw-r--. 1 khyeh0816 khyeh0816  12539 Jan 15 01:04 hw1Sol.Rmd
+<pre><code>## total 1480
+## drwxrwxr-x. 2 khyeh0816 khyeh0816   4096 Jan 19 00:48 .
+## drwxr-xr-x. 5 khyeh0816 khyeh0816   4096 Jan 19 00:44 ..
+## -rw-rw-r--. 1 khyeh0816 khyeh0816 757950 Jan 19 00:48 hw1Sol.html
+## -rw-rw-r--. 1 khyeh0816 khyeh0816  12658 Jan 19 00:49 hw1Sol.Rmd
 ## -rw-r--r--. 1 khyeh0816 khyeh0816 725060 Dec 20 10:40 pg42671.txt</code></pre>
 <pre class="bash"><code>/home/khyeh0816/biostat-203b-2022-winter/middle.sh pg42671.txt 20 5
 #head -n 20 pg42671.txt | tail -n 5</code></pre>
@@ -504,7 +504,7 @@ ls -al
 ## 24 25 26 27 28 29 30</code></pre>
 <p>For this result, cal 9 1752 means that printing the calender for September 1752. The unusual thing is that the date 3rd to 13th are missing for this calender.</p>
 <pre class="bash"><code>date</code></pre>
-<pre><code>## Sat Jan 15 01:04:58 UTC 2022</code></pre>
+<pre><code>## Wed Jan 19 00:49:43 UTC 2022</code></pre>
 <p>For this result, date means that printing the date and time right now.</p>
 <pre class="bash"><code>hostname</code></pre>
 <pre><code>## biostat-203b-teaching-server</code></pre>
@@ -516,35 +516,47 @@ ls -al
 <pre><code>## Linux biostat-203b-teaching-server 3.10.0-1160.49.1.el7.x86_64 #1 SMP Tue Nov 30 15:51:32 UTC 2021 x86_64 x86_64 x86_64 GNU/Linux</code></pre>
 <p>For this result, uname -a means that printing System information used right now.</p>
 <pre class="bash"><code>uptime</code></pre>
-<pre><code>##  01:04:58 up 12 days, 38 min,  2 users,  load average: 0.49, 0.25, 0.18</code></pre>
+<pre><code>##  00:49:43 up 16 days, 23 min,  8 users,  load average: 1.62, 1.11, 0.73</code></pre>
 <p>For this result, uptime returns information about how long your system has been running together with the current time, number of users with running sessions, and the system load averages for the past 1, 5, and 15 minutes.</p>
 <pre class="bash"><code>whoami</code></pre>
 <pre><code>## khyeh0816</code></pre>
 <p>For this result, whoami returns information about current username.</p>
 <pre class="bash"><code>who</code></pre>
 <pre><code>## tomokiokuno0528 pts/1        2022-01-11 01:13 (42.166.94.34.bc.googleusercontent.com)
-## tomokiokuno0528 pts/3        2022-01-10 23:43 (42.166.94.34.bc.googleusercontent.com)</code></pre>
+## tomokiokuno0528 pts/3        2022-01-10 23:43 (42.166.94.34.bc.googleusercontent.com)
+## maschepps pts/6        2022-01-17 19:33 (74.213.228.243)
+## jiahaotian0702 pts/16       2022-01-19 00:20 (104-54-32-28.lightspeed.irvnca.sbcglobal.net)
+## yuyuanlin pts/18       2022-01-19 00:20 (149.142.103.176)
+## lillyhuang25 pts/20       2022-01-19 00:24 (64.201.127.119)
+## inclassdemo pts/17       2022-01-19 00:20 (149.142.103.176)
+## sharonfeng pts/19       2022-01-19 00:20 (38.15.211.52)</code></pre>
 <p>For this result, who command lets you display the users currently logged in to your UNIX or Linux operating system.</p>
 <pre class="bash"><code>w</code></pre>
-<pre><code>##  01:04:58 up 12 days, 38 min,  2 users,  load average: 0.49, 0.25, 0.18
+<pre><code>##  00:49:43 up 16 days, 23 min,  8 users,  load average: 1.62, 1.11, 0.73
 ## USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
-## tomokiok pts/1    42.166.94.34.bc. Tue01    3days  0.01s  0.01s -bash
-## tomokiok pts/3    42.166.94.34.bc. Mon23    3days  0.56s  0.38s ssh -i /home/tomokiokuno0528/.ssh/id_rsa tomokiokuno0528@server.ucla-biostat-203b.com</code></pre>
+## tomokiok pts/1    42.166.94.34.bc. 11Jan22  7days  0.01s  0.01s -bash
+## tomokiok pts/3    42.166.94.34.bc. 10Jan22  7days  0.90s  0.72s ssh -i /home/tomokiokuno0528/.ssh/id_rsa tomokiokuno0528@server.ucla-biostat-203b.com
+## maschepp pts/6    74.213.228.243   Mon19   29:06m  0.03s  0.03s -bash
+## jiahaoti pts/16   104-54-32-28.lig 00:20    7.00s  0.05s  0.05s -bash
+## yuyuanli pts/18   149.142.103.176  00:20    2:07   0.04s  0.04s -bash
+## lillyhua pts/20   64.201.127.119   00:24   15.00s  0.04s  0.04s -bash
+## inclassd pts/17   149.142.103.176  00:20   47.00s  0.06s  0.06s -bash
+## sharonfe pts/19   38.15.211.52     00:20   20:23   0.03s  0.03s -bash</code></pre>
 <p>For this result, w commmand used to show who is logged on and what they are doing.</p>
 <pre class="bash"><code>id</code></pre>
 <pre><code>## uid=1037(khyeh0816) gid=1039(khyeh0816) groups=1039(khyeh0816) context=system_u:system_r:initrc_t:s0</code></pre>
 <p>For this result, id commmand used to show your current ID for this system.</p>
 <pre class="bash"><code>last | head</code></pre>
-<pre><code>## yllai    pts/11       cpe-172-91-85-15 Fri Jan 14 01:57 - 01:58  (00:01)    
-## huazhou  pts/11       149.142.103.91   Fri Jan 14 01:56 - 01:57  (00:00)    
-## yllai    pts/11       cpe-172-91-85-15 Fri Jan 14 01:54 - 01:56  (00:02)    
-## seamusga pts/11       c-73-63-234-195. Fri Jan 14 01:13 - 01:36  (00:23)    
-## yllai    pts/11       cpe-172-91-85-15 Fri Jan 14 01:01 - 01:04  (00:02)    
-## maschepp pts/7        74.213.228.243   Fri Jan 14 00:51 - 00:51  (00:00)    
-## lillyhua pts/17       108.53.250.47    Thu Jan 13 23:27 - 23:27  (00:00)    
-## seamusga pts/12       c-73-63-234-195. Thu Jan 13 22:57 - 23:21  (00:23)    
-## seamusga pts/12       c-73-63-234-195. Thu Jan 13 22:54 - 22:55  (00:00)    
-## seamusga pts/14       c-73-63-234-195. Thu Jan 13 22:32 - 22:45  (00:12)</code></pre>
+<pre><code>## lillyhua pts/20       64.201.127.119   Wed Jan 19 00:24   still logged in   
+## sharonfe pts/19       38.15.211.52     Wed Jan 19 00:20   still logged in   
+## yuyuanli pts/18       149.142.103.176  Wed Jan 19 00:20   still logged in   
+## inclassd pts/17       149.142.103.176  Wed Jan 19 00:20   still logged in   
+## jiahaoti pts/16       104-54-32-28.lig Wed Jan 19 00:20   still logged in   
+## lillyhua pts/14       64.201.127.119   Wed Jan 19 00:10 - 00:11  (00:00)    
+## lillyhua pts/10       64.201.127.119   Tue Jan 18 22:31 - 22:31  (00:00)    
+## huazhou  pts/10       149.142.103.91   Tue Jan 18 22:03 - 22:03  (00:00)    
+## huazhou  pts/12       76.93.103.195    Tue Jan 18 19:52 - 19:52  (00:00)    
+## huazhou  pts/11       76.93.103.195    Tue Jan 18 18:43 - 18:44  (00:00)</code></pre>
 <p>For this result, last | head used to display top 10 (head) the list of all the users logged in and out.</p>
 <pre class="bash"><code>echo {con,pre}{sent,fer}{s,ed}</code></pre>
 <pre><code>## consents consented confers confered presents presented prefers prefered</code></pre>
@@ -552,8 +564,8 @@ ls -al
 <pre class="bash"><code>time sleep 5</code></pre>
 <pre><code>## 
 ## real 0m5.001s
-## user 0m0.001s
-## sys  0m0.000s</code></pre>
+## user 0m0.000s
+## sys  0m0.001s</code></pre>
 <p>For this result, time sleep command used to delay for a fixed amount of time during the execution of any script.</p>
 <pre class="bash"><code>history | tail</code></pre>
 <p>The history command shows a list of the commands entered since you started the session.</p>
