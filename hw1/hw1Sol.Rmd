@@ -96,13 +96,13 @@ zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | head
 #Display the first few lines of `admissions.csv.gz`.
 ```
 ```{bash, echo=T}
-wc -l /mnt/mimiciv/1.0/core/admissions.csv.gz
-#There are 66155 rows in this data file.
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | wc -l
+#There are 523740 rows (after remove header) in this data file.
 ```
 ```{bash, echo=T}
 zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $1}' | sort |
 uniq | wc -l
-#There are 256879 unique patients in this data file
+#There are 256878 (after remove header) unique patients in this data file
 ```
 6. What are the possible values taken by each of the variable `admission_type`, `admission_location`, `insurance`, and `ethnicity`? Also report the count for each unique value of these variables. (Hint: combine Linux commands `zcat`, `head`/`tail`, `awk`, `uniq -c`, `wc`, and so on.)
 ```{bash, echo=T}
@@ -143,11 +143,12 @@ uniq -c | head
 1. You and your friend just have finished reading *Pride and Prejudice* by Jane Austen. Among the four main characters in the book, Elizabeth, Jane, Lydia, and Darcy, your friend thinks that Darcy was the most mentioned. You, however, are certain it was Elizabeth. Obtain the full text of the novel from <http://www.gutenberg.org/cache/epub/42671/pg42671.txt> and save to your local folder. 
 ```{bash, echo=T}
 wget -nc http://www.gutenberg.org/cache/epub/42671/pg42671.txt
-#Wget is the non-interactive network downloader which is used to download 
-#files from the server even when the user has not logged on to the system 
-#and it can work in the background without hindering the current process.
 ```
 Explain what `wget -nc` does. Do **not** put this text file `pg42671.txt` in Git. Complete the following loop to tabulate the number of times each of the four characters is mentioned using Linux commands.
+
+Wget is the non-interactive network downloader which is used to download 
+files from the server even when the user has not logged on to the system 
+and it can work in the background without hindering the current process.
 ```{bash, echo=T}
 wget -nc http://www.gutenberg.org/cache/epub/42671/pg42671.txt
 for char in Elizabeth Jane Lydia Darcy
