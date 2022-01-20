@@ -303,12 +303,12 @@ pre code {
 ## 17301855,29732723,2140-06-06 14:23:00,2140-06-08 14:25:00,,ELECTIVE,,HOME,Other,ENGLISH,,WHITE,,,0
 ## 17991012,24298836,2181-07-10 20:28:00,2181-07-12 15:49:00,,ELECTIVE,,HOME,Other,ENGLISH,,WHITE,,,0
 ## 16865435,23216961,2185-07-19 02:12:00,2185-07-21 11:50:00,,ELECTIVE,,HOME,Other,ENGLISH,,WHITE,,,0</code></pre>
-<pre class="bash"><code>wc -l /mnt/mimiciv/1.0/core/admissions.csv.gz
-#There are 66155 rows in this data file.</code></pre>
-<pre><code>## 66155 /mnt/mimiciv/1.0/core/admissions.csv.gz</code></pre>
+<pre class="bash"><code>zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | wc -l
+#There are 523740 rows (after remove header) in this data file.</code></pre>
+<pre><code>## 523741</code></pre>
 <pre class="bash"><code>zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, &#39;{print $1}&#39; | sort |
 uniq | wc -l
-#There are 256879 unique patients in this data file</code></pre>
+#There are 256878 (after remove header) unique patients in this data file</code></pre>
 <pre><code>## 256879</code></pre>
 <ol start="6" style="list-style-type: decimal">
 <li>What are the possible values taken by each of the variable <code>admission_type</code>, <code>admission_location</code>, <code>insurance</code>, and <code>ethnicity</code>? Also report the count for each unique value of these variables. (Hint: combine Linux commands <code>zcat</code>, <code>head</code>/<code>tail</code>, <code>awk</code>, <code>uniq -c</code>, <code>wc</code>, and so on.)</li>
@@ -383,12 +383,37 @@ uniq -c | head
 <ol style="list-style-type: decimal">
 <li>You and your friend just have finished reading <em>Pride and Prejudice</em> by Jane Austen. Among the four main characters in the book, Elizabeth, Jane, Lydia, and Darcy, your friend thinks that Darcy was the most mentioned. You, however, are certain it was Elizabeth. Obtain the full text of the novel from <a href="http://www.gutenberg.org/cache/epub/42671/pg42671.txt" class="uri">http://www.gutenberg.org/cache/epub/42671/pg42671.txt</a> and save to your local folder.</li>
 </ol>
-<pre class="bash"><code>wget -nc http://www.gutenberg.org/cache/epub/42671/pg42671.txt
-#Wget is the non-interactive network downloader which is used to download 
-#files from the server even when the user has not logged on to the system 
-#and it can work in the background without hindering the current process.</code></pre>
-<pre><code>## File ‘pg42671.txt’ already there; not retrieving.</code></pre>
+<pre class="bash"><code>wget -nc http://www.gutenberg.org/cache/epub/42671/pg42671.txt</code></pre>
+<pre><code>## --2022-01-20 22:18:20--  http://www.gutenberg.org/cache/epub/42671/pg42671.txt
+## Resolving www.gutenberg.org (www.gutenberg.org)... 152.19.134.47, 2610:28:3090:3000:0:bad:cafe:47
+## Connecting to www.gutenberg.org (www.gutenberg.org)|152.19.134.47|:80... connected.
+## HTTP request sent, awaiting response... 302 Found
+## Location: https://www.gutenberg.org/cache/epub/42671/pg42671.txt [following]
+## --2022-01-20 22:18:20--  https://www.gutenberg.org/cache/epub/42671/pg42671.txt
+## Connecting to www.gutenberg.org (www.gutenberg.org)|152.19.134.47|:443... connected.
+## HTTP request sent, awaiting response... 200 OK
+## Length: 725060 (708K) [text/plain]
+## Saving to: ‘pg42671.txt’
+## 
+##      0K .......... .......... .......... .......... ..........  7%  688K 1s
+##     50K .......... .......... .......... .......... .......... 14%  683K 1s
+##    100K .......... .......... .......... .......... .......... 21% 86.2M 1s
+##    150K .......... .......... .......... .......... .......... 28%  696K 1s
+##    200K .......... .......... .......... .......... .......... 35%  110M 0s
+##    250K .......... .......... .......... .......... .......... 42%  144M 0s
+##    300K .......... .......... .......... .......... .......... 49%  113M 0s
+##    350K .......... .......... .......... .......... .......... 56%  109M 0s
+##    400K .......... .......... .......... .......... .......... 63%  701K 0s
+##    450K .......... .......... .......... .......... .......... 70%  129M 0s
+##    500K .......... .......... .......... .......... .......... 77%  128M 0s
+##    550K .......... .......... .......... .......... .......... 84%  128M 0s
+##    600K .......... .......... .......... .......... .......... 91%  152M 0s
+##    650K .......... .......... .......... .......... .......... 98%  145M 0s
+##    700K ........                                              100% 74.3M=0.3s
+## 
+## 2022-01-20 22:18:21 (2.36 MB/s) - ‘pg42671.txt’ saved [725060/725060]</code></pre>
 <p>Explain what <code>wget -nc</code> does. Do <strong>not</strong> put this text file <code>pg42671.txt</code> in Git. Complete the following loop to tabulate the number of times each of the four characters is mentioned using Linux commands.</p>
+<p>Wget is the non-interactive network downloader which is used to download files from the server even when the user has not logged on to the system and it can work in the background without hindering the current process.</p>
 <pre class="bash"><code>wget -nc http://www.gutenberg.org/cache/epub/42671/pg42671.txt
 for char in Elizabeth Jane Lydia Darcy
 do
@@ -426,11 +451,11 @@ head -n &quot;$2&quot; &quot;$1&quot; | tail -n &quot;$3&quot;</code></pre>
 ls -al
 #-rwxr-x--x.  1 khyeh0816 khyeh0816  124 Jan 14 23:42 middle.sh</code></pre>
 <pre><code>## total 1480
-## drwxrwxr-x. 2 khyeh0816 khyeh0816   4096 Jan 19 00:48 .
-## drwxr-xr-x. 5 khyeh0816 khyeh0816   4096 Jan 19 00:44 ..
-## -rw-rw-r--. 1 khyeh0816 khyeh0816 757950 Jan 19 00:48 hw1Sol.html
-## -rw-rw-r--. 1 khyeh0816 khyeh0816  12658 Jan 19 00:49 hw1Sol.Rmd
-## -rw-r--r--. 1 khyeh0816 khyeh0816 725060 Dec 20 10:40 pg42671.txt</code></pre>
+## drwxrwxr-x. 2 khyeh0816 khyeh0816   4096 Jan 20 22:18 .
+## drwxr-xr-x. 5 khyeh0816 khyeh0816   4096 Jan 20 21:34 ..
+## -rw-rw-r--. 1 khyeh0816 khyeh0816 759167 Jan 20 22:16 hw1Sol.html
+## -rw-rw-r--. 1 khyeh0816 khyeh0816  12708 Jan 20 22:17 hw1Sol.Rmd
+## -rw-r--r--. 1 khyeh0816 khyeh0816 725060 Jan 19 11:49 pg42671.txt</code></pre>
 <pre class="bash"><code>/home/khyeh0816/biostat-203b-2022-winter/middle.sh pg42671.txt 20 5
 #head -n 20 pg42671.txt | tail -n 5</code></pre>
 <pre><code>## 
@@ -504,7 +529,7 @@ ls -al
 ## 24 25 26 27 28 29 30</code></pre>
 <p>For this result, cal 9 1752 means that printing the calender for September 1752. The unusual thing is that the date 3rd to 13th are missing for this calender.</p>
 <pre class="bash"><code>date</code></pre>
-<pre><code>## Wed Jan 19 00:49:43 UTC 2022</code></pre>
+<pre><code>## Thu Jan 20 22:18:21 UTC 2022</code></pre>
 <p>For this result, date means that printing the date and time right now.</p>
 <pre class="bash"><code>hostname</code></pre>
 <pre><code>## biostat-203b-teaching-server</code></pre>
@@ -516,7 +541,7 @@ ls -al
 <pre><code>## Linux biostat-203b-teaching-server 3.10.0-1160.49.1.el7.x86_64 #1 SMP Tue Nov 30 15:51:32 UTC 2021 x86_64 x86_64 x86_64 GNU/Linux</code></pre>
 <p>For this result, uname -a means that printing System information used right now.</p>
 <pre class="bash"><code>uptime</code></pre>
-<pre><code>##  00:49:43 up 16 days, 23 min,  8 users,  load average: 1.62, 1.11, 0.73</code></pre>
+<pre><code>##  22:18:21 up 17 days, 21:51,  3 users,  load average: 0.73, 0.42, 0.25</code></pre>
 <p>For this result, uptime returns information about how long your system has been running together with the current time, number of users with running sessions, and the system load averages for the past 1, 5, and 15 minutes.</p>
 <pre class="bash"><code>whoami</code></pre>
 <pre><code>## khyeh0816</code></pre>
@@ -524,39 +549,29 @@ ls -al
 <pre class="bash"><code>who</code></pre>
 <pre><code>## tomokiokuno0528 pts/1        2022-01-11 01:13 (42.166.94.34.bc.googleusercontent.com)
 ## tomokiokuno0528 pts/3        2022-01-10 23:43 (42.166.94.34.bc.googleusercontent.com)
-## maschepps pts/6        2022-01-17 19:33 (74.213.228.243)
-## jiahaotian0702 pts/16       2022-01-19 00:20 (104-54-32-28.lightspeed.irvnca.sbcglobal.net)
-## yuyuanlin pts/18       2022-01-19 00:20 (149.142.103.176)
-## lillyhuang25 pts/20       2022-01-19 00:24 (64.201.127.119)
-## inclassdemo pts/17       2022-01-19 00:20 (149.142.103.176)
-## sharonfeng pts/19       2022-01-19 00:20 (38.15.211.52)</code></pre>
+## maschepps pts/6        2022-01-17 19:33 (74.213.228.243)</code></pre>
 <p>For this result, who command lets you display the users currently logged in to your UNIX or Linux operating system.</p>
 <pre class="bash"><code>w</code></pre>
-<pre><code>##  00:49:43 up 16 days, 23 min,  8 users,  load average: 1.62, 1.11, 0.73
+<pre><code>##  22:18:21 up 17 days, 21:51,  3 users,  load average: 0.73, 0.42, 0.25
 ## USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
-## tomokiok pts/1    42.166.94.34.bc. 11Jan22  7days  0.01s  0.01s -bash
-## tomokiok pts/3    42.166.94.34.bc. 10Jan22  7days  0.90s  0.72s ssh -i /home/tomokiokuno0528/.ssh/id_rsa tomokiokuno0528@server.ucla-biostat-203b.com
-## maschepp pts/6    74.213.228.243   Mon19   29:06m  0.03s  0.03s -bash
-## jiahaoti pts/16   104-54-32-28.lig 00:20    7.00s  0.05s  0.05s -bash
-## yuyuanli pts/18   149.142.103.176  00:20    2:07   0.04s  0.04s -bash
-## lillyhua pts/20   64.201.127.119   00:24   15.00s  0.04s  0.04s -bash
-## inclassd pts/17   149.142.103.176  00:20   47.00s  0.06s  0.06s -bash
-## sharonfe pts/19   38.15.211.52     00:20   20:23   0.03s  0.03s -bash</code></pre>
+## tomokiok pts/1    42.166.94.34.bc. 11Jan22  9days  0.01s  0.01s -bash
+## tomokiok pts/3    42.166.94.34.bc. 10Jan22  9days  1.10s  0.92s ssh -i /home/tomokiokuno0528/.ssh/id_rsa tomokiokuno0528@server.ucla-biostat-203b.com
+## maschepp pts/6    74.213.228.243   Mon19    3days  0.03s  0.03s -bash</code></pre>
 <p>For this result, w commmand used to show who is logged on and what they are doing.</p>
 <pre class="bash"><code>id</code></pre>
 <pre><code>## uid=1037(khyeh0816) gid=1039(khyeh0816) groups=1039(khyeh0816) context=system_u:system_r:initrc_t:s0</code></pre>
 <p>For this result, id commmand used to show your current ID for this system.</p>
 <pre class="bash"><code>last | head</code></pre>
-<pre><code>## lillyhua pts/20       64.201.127.119   Wed Jan 19 00:24   still logged in   
-## sharonfe pts/19       38.15.211.52     Wed Jan 19 00:20   still logged in   
-## yuyuanli pts/18       149.142.103.176  Wed Jan 19 00:20   still logged in   
-## inclassd pts/17       149.142.103.176  Wed Jan 19 00:20   still logged in   
-## jiahaoti pts/16       104-54-32-28.lig Wed Jan 19 00:20   still logged in   
-## lillyhua pts/14       64.201.127.119   Wed Jan 19 00:10 - 00:11  (00:00)    
-## lillyhua pts/10       64.201.127.119   Tue Jan 18 22:31 - 22:31  (00:00)    
-## huazhou  pts/10       149.142.103.91   Tue Jan 18 22:03 - 22:03  (00:00)    
-## huazhou  pts/12       76.93.103.195    Tue Jan 18 19:52 - 19:52  (00:00)    
-## huazhou  pts/11       76.93.103.195    Tue Jan 18 18:43 - 18:44  (00:00)</code></pre>
+<pre><code>## blei001  pts/7        cpe-76-171-0-146 Thu Jan 20 06:38 - 06:41  (00:02)    
+## jiahaoti pts/14       104-54-32-28.lig Thu Jan 20 02:14 - 04:59  (02:44)    
+## huazhou  pts/30       149.142.103.91   Wed Jan 19 02:23 - 02:32  (00:09)    
+## lillyhua pts/20       64.201.127.119   Wed Jan 19 01:13 - 03:56  (02:43)    
+## lillyhua pts/20       64.201.127.119   Wed Jan 19 01:10 - 01:12  (00:01)    
+## lillyhua pts/20       64.201.127.119   Wed Jan 19 00:24 - 01:10  (00:46)    
+## sharonfe pts/19       38.15.211.52     Wed Jan 19 00:20 - 00:52  (00:31)    
+## yuyuanli pts/18       149.142.103.176  Wed Jan 19 00:20 - 02:01  (01:41)    
+## inclassd pts/17       149.142.103.176  Wed Jan 19 00:20 - 02:32  (02:11)    
+## jiahaoti pts/16       104-54-32-28.lig Wed Jan 19 00:20 - 02:00  (01:40)</code></pre>
 <p>For this result, last | head used to display top 10 (head) the list of all the users logged in and out.</p>
 <pre class="bash"><code>echo {con,pre}{sent,fer}{s,ed}</code></pre>
 <pre><code>## consents consented confers confered presents presented prefers prefered</code></pre>
@@ -564,8 +579,8 @@ ls -al
 <pre class="bash"><code>time sleep 5</code></pre>
 <pre><code>## 
 ## real 0m5.001s
-## user 0m0.000s
-## sys  0m0.001s</code></pre>
+## user 0m0.001s
+## sys  0m0.000s</code></pre>
 <p>For this result, time sleep command used to delay for a fixed amount of time during the execution of any script.</p>
 <pre class="bash"><code>history | tail</code></pre>
 <p>The history command shows a list of the commands entered since you started the session.</p>
