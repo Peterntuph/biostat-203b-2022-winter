@@ -211,7 +211,7 @@ pre code {
 <div id="q2.-data-ethics-training" class="section level2">
 <h2>Q2. Data ethics training</h2>
 <p>This exercise (and later in this course) uses the <a href="https://mimic-iv.mit.edu">MIMIC-IV data</a>, a freely accessible critical care database developed by the MIT Lab for Computational Physiology. Follow the instructions at <a href="https://mimic.mit.edu/docs/gettingstarted/" class="uri">https://mimic.mit.edu/docs/gettingstarted/</a> to (1) complete the CITI <code>Data or Specimens Only Research</code> course and (2) obtain the PhysioNet credential for using the MIMIC-IV data. Display the verification links to your completion report and completion certificate here. (Hint: The CITI training takes a couple hours and the PhysioNet credentialing takes a couple days; do not leave it to the last minute.)</p>
-<p>Verification links: <br> completion report &lt;www.citiprogram.org/verify/?ka3709a6c-2c5e-48e2-96f4-b5d4b5d73122-46525347&gt; <br> completion certificate &lt;www.citiprogram.org/verify/?w5b2ce486-632e-4483-8bc5-7ef810042545-46525347&gt; <br> PhysioNet credential <a href="https://drive.google.com/file/d/1yIJfb0cJrOzLICmkzgp5q3jr3Whr8GK9/view?usp=sharing" class="uri">https://drive.google.com/file/d/1yIJfb0cJrOzLICmkzgp5q3jr3Whr8GK9/view?usp=sharing</a></p>
+<p><strong>Verification links:</strong> <br> Completion Report: <a href="http://www.citiprogram.org/verify/?ka3709a6c-2c5e-48e2-96f4-b5d4b5d73122-46525347" class="uri">http://www.citiprogram.org/verify/?ka3709a6c-2c5e-48e2-96f4-b5d4b5d73122-46525347</a> <br> Completion Certificate: <a href="http://www.citiprogram.org/verify/?w5b2ce486-632e-4483-8bc5-7ef810042545-46525347" class="uri">http://www.citiprogram.org/verify/?w5b2ce486-632e-4483-8bc5-7ef810042545-46525347</a> <br> PhysioNet Credential: <a href="https://drive.google.com/file/d/1yIJfb0cJrOzLICmkzgp5q3jr3Whr8GK9/view?usp=sharing" class="uri">https://drive.google.com/file/d/1yIJfb0cJrOzLICmkzgp5q3jr3Whr8GK9/view?usp=sharing</a></p>
 </div>
 <div id="q3.-linux-shell-commands" class="section level2">
 <h2>Q3. Linux Shell Commands</h2>
@@ -227,9 +227,9 @@ pre code {
 ## -rw-r--r--. 1 root root 2518 Jan  4 21:54 LICENSE.txt
 ## -rw-r--r--. 1 root root 2459 Jan  4 21:48 SHA256SUMS.txt</code></pre>
 <p>Please, do <strong>not</strong> put these data files into Git; they are big. Do <strong>not</strong> copy them into your directory. Do <strong>not</strong> decompress the gz data files. These create unnecessary big files on storage and are not big data friendly practices. Just read from the data folder <code>/mnt/mimiciv/1.0</code> directly in following exercises.</p>
-<pre><code>Use Bash commands to answer following questions.</code></pre>
+<p>Use Bash commands to answer following questions.</p>
 <ol start="2" style="list-style-type: decimal">
-<li>Display the contents in the folders <code>core</code>, <code>hosp</code>, <code>icu</code>. Why are these data files distributed as <code>.csv.gz</code> files instead of <code>.csv</code> (comma separated values) files? Read the page <a href="https://mimic.mit.edu/docs/iv/" class="uri">https://mimic.mit.edu/docs/iv/</a> to understand what’s in each folder.</li>
+<li>Display the contents in the folders <code>core</code>, <code>hosp</code>, <code>icu</code>. Why are these data files distributed as <code>.csv.gz</code> files instead of <code>.csv</code> (comma separated values) files? Read the page <a href="https://mimic.mit.edu/docs/iv/" class="uri">https://mimic.mit.edu/docs/iv/</a> to understand what’s in each folder. <br> <strong>Solution:</strong></li>
 </ol>
 <pre class="bash"><code>ls -l /mnt/mimiciv/1.0/core</code></pre>
 <pre><code>## total 71472
@@ -267,13 +267,10 @@ pre code {
 ## -rw-r--r--. 1 root root  352443512 Jan  4 21:52 inputevents.csv.gz
 ## -rw-r--r--. 1 root root   37095672 Jan  4 21:52 outputevents.csv.gz
 ## -rw-r--r--. 1 root root   20567368 Jan  4 21:52 procedureevents.csv.gz</code></pre>
-<p>As we know that csv.gz files are the CSV file compressed with gzip utility. The reason why those data distributed as .csv.gz files are because they are too large. In order to reduce the size of files, they used compressed file type csv.gz</p>
+<p><br> <strong>Solution:</strong> <br> As we know that csv.gz files are the CSV file compressed with gzip utility. The reason why those data distributed as .csv.gz files are because they are too large. In order to reduce the size of files, they used compressed file type csv.gz</p>
 <ol start="3" style="list-style-type: decimal">
-<li>Briefly describe what bash commands <code>zcat</code>, <code>zless</code>, <code>zmore</code>, and <code>zgrep</code> do.</li>
-</ol>
-<p>#man zcat ‘The zcat command allows the user to expand and view a compressed file without uncompressing that file.’ <br> #man zless ‘Zless is a filter which allows examination of compressed or plain text files one screenful at a time on a soft-copy terminal.’ <br> #man zmore ‘Zmore command is a handy utility that lets you view gzipped files one screen at a time (much like the more command) without first decompressing them.’ <br> #man zgrep ‘Zgrep command is used to search out expressions from a given a file even if it is compressed.’</p>
-<ol start="4" style="list-style-type: decimal">
-<li>What’s the output of following bash script? Listing all the csv.gz files contents in /mnt/mimiciv/1.0/core/*.gz directory.</li>
+<li><p>Briefly describe what bash commands <code>zcat</code>, <code>zless</code>, <code>zmore</code>, and <code>zgrep</code> do. <br> <strong>Solution:</strong> <br> <code>man zcat</code> ‘The zcat command allows the user to expand and view a compressed file without uncompressing that file.’ <br> <code>man zless</code> ‘Zless is a filter which allows examination of compressed or plain text files one screenful at a time on a soft-copy terminal.’ <br> <code>man zmore</code> ‘Zmore command is a handy utility that lets you view gzipped files one screen at a time (much like the more command) without first decompressing them.’ <br> <code>man zgrep</code> ‘Zgrep command is used to search out expressions from a given a file even if it is compressed.’</p></li>
+<li><p>What’s the output of following bash script? Listing all the csv.gz files contents in /mnt/mimiciv/1.0/core/*.gz directory. <br> <strong>Solution:</strong> <br></p></li>
 </ol>
 <pre class="bash"><code>    for datafile in /mnt/mimiciv/1.0/core/*.gz
       do
@@ -283,7 +280,7 @@ pre code {
 ## -rw-r--r--. 1 root root 2955582 Jan  4 21:48 /mnt/mimiciv/1.0/core/patients.csv.gz
 ## -rw-r--r--. 1 root root 53014503 Jan  4 21:48 /mnt/mimiciv/1.0/core/transfers.csv.gz</code></pre>
 <p>Display the number of lines in each data file using a similar loop.</p>
-<p>Answer: the outcomes for this command are included the header line.</p>
+<p><strong>Solution:</strong> the outcomes for this command included the header line.</p>
 <pre class="bash"><code>    for datafile in /mnt/mimiciv/1.0/core/*.gz
       do
        zcat $datafile | wc -l
@@ -294,6 +291,7 @@ pre code {
 <ol start="5" style="list-style-type: decimal">
 <li>Display the first few lines of <code>admissions.csv.gz</code>. How many rows are in this data file? How many unique patients (identified by <code>subject_id</code>) are in this data file? (Hint: combine Linux commands <code>zcat</code>, <code>head</code>/<code>tail</code>, <code>awk</code>, <code>sort</code>, <code>uniq</code>, <code>wc</code>, and so on.)</li>
 </ol>
+<p><strong>Solution:</strong></p>
 <pre class="bash"><code>zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | head
 #Display the first few lines of `admissions.csv.gz`.</code></pre>
 <pre><code>## subject_id,hadm_id,admittime,dischtime,deathtime,admission_type,admission_location,discharge_location,insurance,language,marital_status,ethnicity,edregtime,edouttime,hospital_expire_flag
@@ -314,7 +312,7 @@ uniq | wc -l
 #There are 256878 (after remove header) unique patients in this data file</code></pre>
 <pre><code>## 256878</code></pre>
 <ol start="6" style="list-style-type: decimal">
-<li>What are the possible values taken by each of the variable <code>admission_type</code>, <code>admission_location</code>, <code>insurance</code>, and <code>ethnicity</code>? Also report the count for each unique value of these variables. (Hint: combine Linux commands <code>zcat</code>, <code>head</code>/<code>tail</code>, <code>awk</code>, <code>uniq -c</code>, <code>wc</code>, and so on.)</li>
+<li>What are the possible values taken by each of the variable <code>admission_type</code>, <code>admission_location</code>, <code>insurance</code>, and <code>ethnicity</code>? Also report the count for each unique value of these variables. (Hint: combine Linux commands <code>zcat</code>, <code>head</code>/<code>tail</code>, <code>awk</code>, <code>uniq -c</code>, <code>wc</code>, and so on.) <br> <strong>Solution:</strong> There are 9 unique admission_type value in this data file</li>
 </ol>
 <pre class="bash"><code>#admission_type
 zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | tail -n +2 | awk -F, &#39;{print $6}&#39; | sort |
@@ -332,6 +330,7 @@ uniq -c | head -10
 ##   55497 OBSERVATION ADMIT
 ##   41074 SURGICAL SAME DAY ADMISSION
 ##   47930 URGENT</code></pre>
+<p><strong>Solution:</strong> There are 12 unique admission_location value in this data file</p>
 <pre class="bash"><code>#admission_location
 zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | tail -n +2 | awk -F, &#39;{print $7}&#39; | sort |
 uniq -c | wc -l
@@ -351,6 +350,7 @@ uniq -c | head -13
 ##   39121 TRANSFER FROM HOSPITAL
 ##    4063 TRANSFER FROM SKILLED NURSING FACILITY
 ##   16660 WALK-IN/SELF REFERRAL</code></pre>
+<p><strong>Solution:</strong> There are 3 unique insurance value in this data file</p>
 <pre class="bash"><code>#insurance
 zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | tail -n +2 | awk -F, &#39;{print $9}&#39; | sort |
 uniq -c | wc -l
@@ -361,6 +361,7 @@ uniq -c | head
 ##   50850 Medicaid
 ##  171360 Medicare
 ##  301530 Other</code></pre>
+<p><strong>Solution:</strong> There are 8 unique ethnicity value in this data file</p>
 <pre class="bash"><code>#ethnicity
 zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | tail -n +2 | awk -F, &#39;{print $12}&#39; | sort |
 uniq -c | wc -l
@@ -383,61 +384,62 @@ uniq -c | head
 <li>You and your friend just have finished reading <em>Pride and Prejudice</em> by Jane Austen. Among the four main characters in the book, Elizabeth, Jane, Lydia, and Darcy, your friend thinks that Darcy was the most mentioned. You, however, are certain it was Elizabeth. Obtain the full text of the novel from <a href="http://www.gutenberg.org/cache/epub/42671/pg42671.txt" class="uri">http://www.gutenberg.org/cache/epub/42671/pg42671.txt</a> and save to your local folder.</li>
 </ol>
 <pre class="bash"><code>wget -nc http://www.gutenberg.org/cache/epub/42671/pg42671.txt</code></pre>
-<pre><code>## --2022-01-21 06:38:25--  http://www.gutenberg.org/cache/epub/42671/pg42671.txt
+<pre><code>## --2022-01-21 23:04:09--  http://www.gutenberg.org/cache/epub/42671/pg42671.txt
 ## Resolving www.gutenberg.org (www.gutenberg.org)... 152.19.134.47, 2610:28:3090:3000:0:bad:cafe:47
 ## Connecting to www.gutenberg.org (www.gutenberg.org)|152.19.134.47|:80... connected.
 ## HTTP request sent, awaiting response... 302 Found
 ## Location: https://www.gutenberg.org/cache/epub/42671/pg42671.txt [following]
-## --2022-01-21 06:38:25--  https://www.gutenberg.org/cache/epub/42671/pg42671.txt
+## --2022-01-21 23:04:09--  https://www.gutenberg.org/cache/epub/42671/pg42671.txt
 ## Connecting to www.gutenberg.org (www.gutenberg.org)|152.19.134.47|:443... connected.
 ## HTTP request sent, awaiting response... 200 OK
 ## Length: 725060 (708K) [text/plain]
 ## Saving to: ‘pg42671.txt’
 ## 
-##      0K .......... .......... .......... .......... ..........  7%  685K 1s
-##     50K .......... .......... .......... .......... .......... 14%  683K 1s
-##    100K .......... .......... .......... .......... .......... 21%  103M 1s
-##    150K .......... .......... .......... .......... .......... 28%  105M 0s
-##    200K .......... .......... .......... .......... .......... 35%  691K 0s
-##    250K .......... .......... .......... .......... .......... 42%  108M 0s
-##    300K .......... .......... .......... .......... .......... 49%  135M 0s
-##    350K .......... .......... .......... .......... .......... 56%  162M 0s
-##    400K .......... .......... .......... .......... .......... 63%  696K 0s
-##    450K .......... .......... .......... .......... .......... 70%  128M 0s
-##    500K .......... .......... .......... .......... .......... 77%  137M 0s
+##      0K .......... .......... .......... .......... ..........  7%  699K 1s
+##     50K .......... .......... .......... .......... .......... 14%  698K 1s
+##    100K .......... .......... .......... .......... .......... 21% 63.5M 1s
+##    150K .......... .......... .......... .......... .......... 28%  151M 0s
+##    200K .......... .......... .......... .......... .......... 35%  702K 0s
+##    250K .......... .......... .......... .......... .......... 42%  102M 0s
+##    300K .......... .......... .......... .......... .......... 49%  136M 0s
+##    350K .......... .......... .......... .......... .......... 56%  157M 0s
+##    400K .......... .......... .......... .......... .......... 63%  707K 0s
+##    450K .......... .......... .......... .......... .......... 70%  118M 0s
+##    500K .......... .......... .......... .......... .......... 77%  143M 0s
 ##    550K .......... .......... .......... .......... .......... 84%  151M 0s
-##    600K .......... .......... .......... .......... .......... 91%  130M 0s
-##    650K .......... .......... .......... .......... .......... 98%  137M 0s
-##    700K ........                                              100%  183M=0.3s
+##    600K .......... .......... .......... .......... .......... 91%  133M 0s
+##    650K .......... .......... .......... .......... .......... 98%  142M 0s
+##    700K ........                                              100%  153M=0.3s
 ## 
-## 2022-01-21 06:38:26 (2.35 MB/s) - ‘pg42671.txt’ saved [725060/725060]</code></pre>
+## 2022-01-21 23:04:10 (2.39 MB/s) - ‘pg42671.txt’ saved [725060/725060]</code></pre>
 <p>Explain what <code>wget -nc</code> does. Do <strong>not</strong> put this text file <code>pg42671.txt</code> in Git. Complete the following loop to tabulate the number of times each of the four characters is mentioned using Linux commands.</p>
-<p>Wget is the non-interactive network downloader which is used to download files from the server even when the user has not logged on to the system and it can work in the background without hindering the current process.</p>
+<p><strong>Solution:</strong> Wget is the non-interactive network downloader which is used to download files from the server even when the user has not logged on to the system and it can work in the background without hindering the current process.</p>
+<p>The counts for each character name are listed below (without -o option, even if there are two names in one line, it is considered to be just one count.)</p>
 <pre class="bash"><code>wget -nc http://www.gutenberg.org/cache/epub/42671/pg42671.txt
 for char in Elizabeth Jane Lydia Darcy
 do
   echo $char:
-  grep $char pg42671.txt | wc -l
+  grep -o $char pg42671.txt | wc -l
 done</code></pre>
 <pre><code>## File ‘pg42671.txt’ already there; not retrieving.
 ## 
 ## Elizabeth:
-## 633
+## 634
 ## Jane:
-## 290
+## 294
 ## Lydia:
-## 166
+## 170
 ## Darcy:
-## 414</code></pre>
+## 417</code></pre>
 <ol start="2" style="list-style-type: decimal">
 <li>What’s the difference between the following two commands?</li>
 </ol>
 <pre class="bash"><code>echo &#39;hello, world&#39; &gt; test1.txt</code></pre>
 <pre><code>and</code></pre>
 <pre class="bash"><code>echo &#39;hello, world&#39; &gt;&gt; test2.txt</code></pre>
-<p>For the first command, it directs ‘hello, world’ from command to test1.txt. However, for the second, it appends ‘hello, world’ from command to test1.txt.</p>
+<p><strong>Solution:</strong> For the first command <code>echo &#39;hello, world&#39; &gt; test1.txt</code>, it directs ‘hello, world’ from command to test1.txt. However, for the second <code>echo &#39;hello, world&#39; &gt;&gt; test2.txt</code>, it appends ‘hello, world’ from command to test1.txt.</p>
 <ol start="3" style="list-style-type: decimal">
-<li>Using your favorite text editor (e.g., <code>vi</code>), type the following and save the file as <code>middle.sh</code>:</li>
+<li>Using your favorite text editor (e.g., <code>vi</code>), type the following and save the file as <code>middle.sh</code>: <br> <strong>Solution:</strong></li>
 </ol>
 <pre class="bash"><code>#!/bin/sh
 # Select lines from the middle of a file.
@@ -445,15 +447,15 @@ done</code></pre>
 head -n &quot;$2&quot; &quot;$1&quot; | tail -n &quot;$3&quot;</code></pre>
 <pre class="bash"><code>#vi ./middle.sh 
 # then copy and paste the content</code></pre>
-<p>Using <code>chmod</code> make the file executable by the owner, and run</p>
+<p>Using <code>chmod</code> make the file executable by the owner, and run <br> <strong>Solution:</strong></p>
 <pre class="bash"><code>chmod 751 /home/khyeh0816/biostat-203b-2022-winter/middle.sh
 ls -al
 #-rwxr-x--x.  1 khyeh0816 khyeh0816  124 Jan 14 23:42 middle.sh</code></pre>
 <pre><code>## total 1480
-## drwxrwxr-x. 2 khyeh0816 khyeh0816   4096 Jan 21 06:38 .
-## drwxr-xr-x. 5 khyeh0816 khyeh0816   4096 Jan 21 06:23 ..
-## -rw-rw-r--. 1 khyeh0816 khyeh0816 759427 Jan 21 06:28 hw1Sol.html
-## -rw-rw-r--. 1 khyeh0816 khyeh0816  12920 Jan 21 06:37 hw1Sol.Rmd
+## drwxrwxr-x. 2 khyeh0816 khyeh0816   4096 Jan 21 23:04 .
+## drwxr-xr-x. 5 khyeh0816 khyeh0816   4096 Jan 21 22:25 ..
+## -rw-rw-r--. 1 khyeh0816 khyeh0816 760502 Jan 21 23:01 hw1Sol.html
+## -rw-rw-r--. 1 khyeh0816 khyeh0816  13662 Jan 21 23:03 hw1Sol.Rmd
 ## -rw-r--r--. 1 khyeh0816 khyeh0816 725060 Jan 19 11:49 pg42671.txt</code></pre>
 <pre class="bash"><code>/home/khyeh0816/biostat-203b-2022-winter/middle.sh pg42671.txt 20 5
 #head -n 20 pg42671.txt | tail -n 5</code></pre>
@@ -463,7 +465,7 @@ ls -al
 ## Editor: R. W. (Robert William) Chapman
 ## </code></pre>
 <p>Explain the output. Explain the meaning of <code>&quot;$1&quot;</code>, <code>&quot;$2&quot;</code>, and <code>&quot;$3&quot;</code> in this shell script. Why do we need the first line of the shell script?</p>
-<p>The output for this command prints author and editor for <em>Pride and Prejudice</em>. For the <code>&quot;$1&quot;</code>, <code>&quot;$2&quot;</code>, and <code>&quot;$3&quot;</code> in this shell script, <code>&quot;$1&quot;</code> means that the filename of this command (In this scenario is <em>pg42671.txt</em>). For the <code>&quot;$2&quot;</code>, it means that the end_line for this file which is number 20th rows in this case. For the <code>&quot;$3&quot;</code>, it shows that how many lines we wants in this case is 5 lines. Thus, the command above is just same as I wrote below:</p>
+<p><strong>Solution:</strong> The output for this command prints author and editor for <em>Pride and Prejudice</em>. For the <code>&quot;$1&quot;</code>, <code>&quot;$2&quot;</code>, and <code>&quot;$3&quot;</code> in this shell script, <code>&quot;$1&quot;</code> means that the filename of this command (In this scenario is <em>pg42671.txt</em>). For the <code>&quot;$2&quot;</code>, it means that the end_line for this file which is number 20th rows in this case. For the <code>&quot;$3&quot;</code>, it shows that how many lines we wants in this case is 5 lines. Thus, the command above is just same as I wrote below:</p>
 <pre class="bash"><code>head -n 20 pg42671.txt | tail -n 5</code></pre>
 <pre><code>## 
 ## Author: Jane Austen
@@ -473,7 +475,7 @@ ls -al
 <p>Lastly, the reason why we need first line of the shell script (#!/bin/sh) is because we would like to make the script always be run with sh, rather than another shell.</p>
 <div id="q5.-more-fun-with-linux" class="section level3">
 <h3>Q5. More fun with Linux</h3>
-<p>Try following commands in Bash and interpret the results: <code>cal</code>, <code>cal 2021</code>, <code>cal 9 1752</code> (anything unusual?), <code>date</code>, <code>hostname</code>, <code>arch</code>, <code>uname -a</code>, <code>uptime</code>, <code>who am i</code>, <code>who</code>, <code>w</code>, <code>id</code>, <code>last | head</code>, <code>echo {con,pre}{sent,fer}{s,ed}</code>, <code>time sleep 5</code>, <code>history | tail</code>.</p>
+<p>Try following commands in Bash and interpret the results: <code>cal</code>, <code>cal 2021</code>, <code>cal 9 1752</code> (anything unusual?), <code>date</code>, <code>hostname</code>, <code>arch</code>, <code>uname -a</code>, <code>uptime</code>, <code>who am i</code>, <code>who</code>, <code>w</code>, <code>id</code>, <code>last | head</code>, <code>echo {con,pre}{sent,fer}{s,ed}</code>, <code>time sleep 5</code>, <code>history | tail</code>. <br> <strong>Solution:</strong></p>
 <pre class="bash"><code>cal</code></pre>
 <pre><code>##     January 2022    
 ## Su Mo Tu We Th Fr Sa
@@ -528,7 +530,7 @@ ls -al
 ## 24 25 26 27 28 29 30</code></pre>
 <p>For this result, cal 9 1752 means that printing the calender for September 1752. The unusual thing is that the date 3rd to 13th are missing for this calender.</p>
 <pre class="bash"><code>date</code></pre>
-<pre><code>## Fri Jan 21 06:38:26 UTC 2022</code></pre>
+<pre><code>## Fri Jan 21 23:04:10 UTC 2022</code></pre>
 <p>For this result, date means that printing the date and time right now.</p>
 <pre class="bash"><code>hostname</code></pre>
 <pre><code>## biostat-203b-teaching-server</code></pre>
@@ -540,7 +542,7 @@ ls -al
 <pre><code>## Linux biostat-203b-teaching-server 3.10.0-1160.49.1.el7.x86_64 #1 SMP Tue Nov 30 15:51:32 UTC 2021 x86_64 x86_64 x86_64 GNU/Linux</code></pre>
 <p>For this result, uname -a means that printing System information used right now.</p>
 <pre class="bash"><code>uptime</code></pre>
-<pre><code>##  06:38:26 up 18 days,  6:11,  5 users,  load average: 0.61, 0.46, 0.43</code></pre>
+<pre><code>##  23:04:10 up 18 days, 22:37,  3 users,  load average: 1.54, 0.92, 0.64</code></pre>
 <p>For this result, uptime returns information about how long your system has been running together with the current time, number of users with running sessions, and the system load averages for the past 1, 5, and 15 minutes.</p>
 <pre class="bash"><code>whoami</code></pre>
 <pre><code>## khyeh0816</code></pre>
@@ -548,40 +550,36 @@ ls -al
 <pre class="bash"><code>who</code></pre>
 <pre><code>## tomokiokuno0528 pts/1        2022-01-11 01:13 (42.166.94.34.bc.googleusercontent.com)
 ## tomokiokuno0528 pts/3        2022-01-10 23:43 (42.166.94.34.bc.googleusercontent.com)
-## maschepps pts/6        2022-01-17 19:33 (74.213.228.243)
-## capj245  pts/13       2022-01-21 03:54 (s-164-67-232-61.resnet.ucla.edu)
-## tokramm  pts/18       2022-01-21 05:07 (76.82.34.63)</code></pre>
+## capj245  pts/13       2022-01-21 03:54 (s-164-67-232-61.resnet.ucla.edu)</code></pre>
 <p>For this result, who command lets you display the users currently logged in to your UNIX or Linux operating system.</p>
 <pre class="bash"><code>w</code></pre>
-<pre><code>##  06:38:26 up 18 days,  6:11,  5 users,  load average: 0.61, 0.46, 0.43
+<pre><code>##  23:04:10 up 18 days, 22:37,  3 users,  load average: 1.54, 0.92, 0.64
 ## USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
 ## tomokiok pts/1    42.166.94.34.bc. 11Jan22 10days  0.01s  0.01s -bash
-## tomokiok pts/3    42.166.94.34.bc. 10Jan22 10days  1.15s  0.97s ssh -i /home/tomokiokuno0528/.ssh/id_rsa tomokiokuno0528@server.ucla-biostat-203b.com
-## maschepp pts/6    74.213.228.243   Mon19    3days  0.03s  0.03s -bash
-## capj245  pts/13   s-164-67-232-61. 03:54    2:43m  0.01s  0.01s -bash
-## tokramm  pts/18   76.82.34.63      05:07    1:30m  0.01s  0.01s -bash</code></pre>
+## tomokiok pts/3    42.166.94.34.bc. 10Jan22 10days  1.23s  1.05s ssh -i /home/tomokiokuno0528/.ssh/id_rsa tomokiokuno0528@server.ucla-biostat-203b.com
+## capj245  pts/13   s-164-67-232-61. 03:54   19:09m  0.01s  0.01s -bash</code></pre>
 <p>For this result, w commmand used to show who is logged on and what they are doing.</p>
 <pre class="bash"><code>id</code></pre>
 <pre><code>## uid=1037(khyeh0816) gid=1039(khyeh0816) groups=1039(khyeh0816) context=system_u:system_r:initrc_t:s0</code></pre>
 <p>For this result, id commmand used to show your current ID for this system.</p>
 <pre class="bash"><code>last | head</code></pre>
-<pre><code>## tokramm  pts/18       76.82.34.63      Fri Jan 21 05:07   still logged in   
+<pre><code>## yuruidon pts/10       42.166.94.34.bc. Fri Jan 21 21:08 - 22:51  (01:42)    
+## yuruidon pts/2        s-169-232-70-203 Fri Jan 21 21:06 - 22:51  (01:45)    
+## yuruidon pts/10       s-169-232-70-203 Fri Jan 21 20:40 - 21:03  (00:22)    
+## tokramm  pts/18       76.82.34.63      Fri Jan 21 05:07 - 07:32  (02:25)    
 ## tokramm  pts/18       76.82.34.63      Fri Jan 21 04:58 - 05:02  (00:04)    
 ## blei001  pts/18       cpe-76-171-0-146 Fri Jan 21 04:56 - 04:56  (00:00)    
 ## tokramm  pts/18       76.82.34.63      Fri Jan 21 04:53 - 04:54  (00:00)    
 ## tokramm  pts/18       76.82.34.63      Fri Jan 21 04:31 - 04:53  (00:21)    
 ## capj245  pts/13       s-164-67-232-61. Fri Jan 21 03:54   still logged in   
-## capj245  pts/13       s-164-67-232-61. Fri Jan 21 03:45 - 03:49  (00:04)    
-## capj245  pts/13       s-164-67-232-61. Fri Jan 21 03:36 - 03:38  (00:01)    
-## yuyuanli pts/30       149.142.103.176  Fri Jan 21 01:13 - 01:14  (00:00)    
-## huazhou  pts/7        108-64-58-205.li Fri Jan 21 01:03 - 01:52  (00:48)</code></pre>
+## capj245  pts/13       s-164-67-232-61. Fri Jan 21 03:45 - 03:49  (00:04)</code></pre>
 <p>For this result, last | head used to display top 10 (head) the list of all the users logged in and out.</p>
 <pre class="bash"><code>echo {con,pre}{sent,fer}{s,ed}</code></pre>
 <pre><code>## consents consented confers confered presents presented prefers prefered</code></pre>
 <p>For this result, echo command used to display line of text/string that are passed as an argument. In this case, it shows the permutations for the words inside those three braces.</p>
 <pre class="bash"><code>time sleep 5</code></pre>
 <pre><code>## 
-## real 0m5.001s
+## real 0m5.002s
 ## user 0m0.001s
 ## sys  0m0.000s</code></pre>
 <p>For this result, time sleep command used to delay for a fixed amount of time during the execution of any script.</p>

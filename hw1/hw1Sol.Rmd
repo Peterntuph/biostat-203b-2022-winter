@@ -32,13 +32,13 @@ sessionInfo()
 
 This exercise (and later in this course) uses the [MIMIC-IV data](https://mimic-iv.mit.edu), a freely accessible critical care database developed by the MIT Lab for Computational Physiology. Follow the instructions at <https://mimic.mit.edu/docs/gettingstarted/> to (1) complete the CITI `Data or Specimens Only Research` course and (2) obtain the PhysioNet credential for using the MIMIC-IV data. Display the verification links to your completion report and completion certificate here. (Hint: The CITI training takes a couple hours and the PhysioNet credentialing takes a couple days; do not leave it to the last minute.)
 
-Verification links:
+**Verification links:**
 <br>
-completion report <www.citiprogram.org/verify/?ka3709a6c-2c5e-48e2-96f4-b5d4b5d73122-46525347>
+Completion Report: <http://www.citiprogram.org/verify/?ka3709a6c-2c5e-48e2-96f4-b5d4b5d73122-46525347>
 <br>
-completion certificate <www.citiprogram.org/verify/?w5b2ce486-632e-4483-8bc5-7ef810042545-46525347>
+Completion Certificate: <http://www.citiprogram.org/verify/?w5b2ce486-632e-4483-8bc5-7ef810042545-46525347>
 <br>
-PhysioNet credential <https://drive.google.com/file/d/1yIJfb0cJrOzLICmkzgp5q3jr3Whr8GK9/view?usp=sharing>
+PhysioNet Credential: <https://drive.google.com/file/d/1yIJfb0cJrOzLICmkzgp5q3jr3Whr8GK9/view?usp=sharing>
 
 ## Q3. Linux Shell Commands
 
@@ -48,9 +48,11 @@ ls -l /mnt/mimiciv/1.0
 ```
 Please, do **not** put these data files into Git; they are big. Do **not** copy them into your directory. Do **not** decompress the gz data files. These create unnecessary big files on storage and are not big data friendly practices. Just read from the data folder `/mnt/mimiciv/1.0` directly in following exercises. 
 
-    Use Bash commands to answer following questions.
+Use Bash commands to answer following questions.
 
 2. Display the contents in the folders `core`, `hosp`, `icu`. Why are these data files distributed as `.csv.gz` files instead of `.csv` (comma separated values) files? Read the page <https://mimic.mit.edu/docs/iv/> to understand what's in each folder.
+<br>
+**Solution:**
 ```{bash, echo=T}
 ls -l /mnt/mimiciv/1.0/core
 ```
@@ -60,31 +62,38 @@ ls -l /mnt/mimiciv/1.0/hosp
 ```{bash, echo=T}
 ls -l /mnt/mimiciv/1.0/icu
 ```
-
+<br>
+**Solution:**
+<br>
 As we know that csv.gz files are the CSV file compressed with gzip utility. 
 The reason why those data distributed as .csv.gz files are because they are too 
 large. In order to reduce the size of files, they used compressed file type csv.gz
 
 3. Briefly describe what bash commands `zcat`, `zless`, `zmore`, and `zgrep` do.
-
-#man zcat
+<br>
+**Solution:**
+<br>
+`man zcat`
 'The zcat command allows the user to expand and view a compressed file without 
 uncompressing that file.'
 <br>
-#man zless
+`man zless`
 'Zless is a filter which allows examination of compressed or plain text files 
 one screenful at a time on a soft-copy terminal.'
 <br>
-#man zmore
+`man zmore`
 'Zmore command is a handy utility that lets you view gzipped files one screen 
 at a time (much like the more command) without first decompressing them.'
 <br>
-#man zgrep
+`man zgrep`
 'Zgrep command is used to search out expressions from a given a file even if 
 it is compressed.'
 
 4. What's the output of following bash script?
-Listing all the csv.gz files contents in /mnt/mimiciv/1.0/core/*.gz directory. 
+Listing all the csv.gz files contents in /mnt/mimiciv/1.0/core/*.gz directory.
+<br>
+**Solution:**
+<br>
 ```{bash, echo=T}
     for datafile in /mnt/mimiciv/1.0/core/*.gz
       do
@@ -93,8 +102,7 @@ Listing all the csv.gz files contents in /mnt/mimiciv/1.0/core/*.gz directory.
 ```
 Display the number of lines in each data file using a similar loop.
 
-Answer: the outcomes for this command are included the header line.
-
+**Solution:** the outcomes for this command included the header line.
 ```{bash, echo=T}
     for datafile in /mnt/mimiciv/1.0/core/*.gz
       do
@@ -104,6 +112,8 @@ Answer: the outcomes for this command are included the header line.
 
 
 5. Display the first few lines of `admissions.csv.gz`. How many rows are in this data file? How many unique patients (identified by `subject_id`) are in this data file? (Hint: combine Linux commands `zcat`, `head`/`tail`, `awk`, `sort`, `uniq`, `wc`, and so on.)
+
+**Solution:**
 ```{bash, echo=T}
 zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | head
 #Display the first few lines of `admissions.csv.gz`.
@@ -118,6 +128,8 @@ uniq | wc -l
 #There are 256878 (after remove header) unique patients in this data file
 ```
 6. What are the possible values taken by each of the variable `admission_type`, `admission_location`, `insurance`, and `ethnicity`? Also report the count for each unique value of these variables. (Hint: combine Linux commands `zcat`, `head`/`tail`, `awk`, `uniq -c`, `wc`, and so on.)
+<br>
+**Solution:** There are 9 unique admission_type value in this data file
 ```{bash, echo=T}
 #admission_type
 zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | tail -n +2 | awk -F, '{print $6}' | sort |
@@ -126,6 +138,7 @@ zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | tail -n +2 | awk -F, '{print $6}'
 uniq -c | head -10
 #There are 9 unique admission_type value in this data file
 ```
+**Solution:** There are 12 unique admission_location value in this data file
 ```{bash, echo=T}
 #admission_location
 zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | tail -n +2 | awk -F, '{print $7}' | sort |
@@ -134,6 +147,7 @@ zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | tail -n +2 | awk -F, '{print $7}'
 uniq -c | head -13
 #There are 12 unique admission_location value in this data file
 ```
+**Solution:** There are 3 unique insurance value in this data file
 ```{bash, echo=T}
 #insurance
 zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | tail -n +2 | awk -F, '{print $9}' | sort |
@@ -142,6 +156,7 @@ zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | tail -n +2 | awk -F, '{print $9}'
 uniq -c | head
 #There are 3 unique insurance value in this data file
 ```
+**Solution:** There are 8 unique ethnicity value in this data file
 ```{bash, echo=T}
 #ethnicity
 zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | tail -n +2 | awk -F, '{print $12}' | sort |
@@ -159,15 +174,20 @@ wget -nc http://www.gutenberg.org/cache/epub/42671/pg42671.txt
 ```
 Explain what `wget -nc` does. Do **not** put this text file `pg42671.txt` in Git. Complete the following loop to tabulate the number of times each of the four characters is mentioned using Linux commands.
 
+**Solution:**
 Wget is the non-interactive network downloader which is used to download 
 files from the server even when the user has not logged on to the system 
 and it can work in the background without hindering the current process.
+
+The counts for each character name are listed below
+(without -o option, even if there are two names in one line, it is considered 
+to be just one count.)
 ```{bash, echo=T}
 wget -nc http://www.gutenberg.org/cache/epub/42671/pg42671.txt
 for char in Elizabeth Jane Lydia Darcy
 do
   echo $char:
-  grep $char pg42671.txt | wc -l
+  grep -o $char pg42671.txt | wc -l
 done
 ```
 
@@ -179,10 +199,16 @@ echo 'hello, world' > test1.txt
 ```{bash eval=FALSE}
 echo 'hello, world' >> test2.txt
 ```
-For the first command, it directs 'hello, world' from command to test1.txt.
-However, for the second, it appends 'hello, world' from command to test1.txt.
+
+**Solution:**
+For the first command `echo 'hello, world' > test1.txt`, 
+it directs 'hello, world' from command to test1.txt.
+However, for the second `echo 'hello, world' >> test2.txt`, 
+it appends 'hello, world' from command to test1.txt.
 
 3. Using your favorite text editor (e.g., `vi`), type the following and save the file as `middle.sh`:
+<br>
+**Solution:**
 ```{bash eval=FALSE}
 #!/bin/sh
 # Select lines from the middle of a file.
@@ -195,6 +221,8 @@ head -n "$2" "$1" | tail -n "$3"
 # then copy and paste the content
 ```
 Using `chmod` make the file executable by the owner, and run 
+<br>
+**Solution:**
 ```{bash, echo=T}
 chmod 751 /home/khyeh0816/biostat-203b-2022-winter/middle.sh
 ls -al
@@ -207,6 +235,7 @@ ls -al
 ```
 Explain the output. Explain the meaning of `"$1"`, `"$2"`, and `"$3"` in this shell script. Why do we need the first line of the shell script?
 
+**Solution:**
 The output for this command prints author and editor for *Pride and Prejudice*.
 For the `"$1"`, `"$2"`, and `"$3"` in this shell script, `"$1"` means that the
 filename of this command (In this scenario is *pg42671.txt*). For the `"$2"`, it
@@ -223,6 +252,8 @@ rather than another shell.
 ### Q5. More fun with Linux
 
 Try following commands in Bash and interpret the results: `cal`, `cal 2021`, `cal 9 1752` (anything unusual?), `date`, `hostname`, `arch`, `uname -a`, `uptime`, `who am i`, `who`, `w`, `id`, `last | head`, `echo {con,pre}{sent,fer}{s,ed}`, `time sleep 5`, `history | tail`.
+<br>
+**Solution:**
 ```{bash, echo=T}
 cal
 ```
