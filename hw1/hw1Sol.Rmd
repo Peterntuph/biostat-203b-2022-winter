@@ -61,79 +61,92 @@ ls -l /mnt/mimiciv/1.0/hosp
 ls -l /mnt/mimiciv/1.0/icu
 ```
 
-As we know that csv.gz files are the CSV file compressed with gzip utility. The reason why those data distributed as .csv.gz files are because they are too large. In order to reduce the size of files, they used compressed file type csv.gz
+As we know that csv.gz files are the CSV file compressed with gzip utility. 
+The reason why those data distributed as .csv.gz files are because they are too 
+large. In order to reduce the size of files, they used compressed file type csv.gz
 
 3. Briefly describe what bash commands `zcat`, `zless`, `zmore`, and `zgrep` do.
 
 #man zcat
-'The zcat command allows the user to expand and view a compressed file without uncompressing that file.'
+'The zcat command allows the user to expand and view a compressed file without 
+uncompressing that file.'
+<br>
 #man zless
-'Zless is a filter which allows examination of compressed or plain text files one screenful at a time on a soft-copy terminal.'
+'Zless is a filter which allows examination of compressed or plain text files 
+one screenful at a time on a soft-copy terminal.'
+<br>
 #man zmore
-'Zmore command is a handy utility that lets you view gzipped files one screen at a time (much like the more command) without first decompressing them.'
+'Zmore command is a handy utility that lets you view gzipped files one screen 
+at a time (much like the more command) without first decompressing them.'
+<br>
 #man zgrep
-'Zgrep command is used to search out expressions from a given a file even if it is compressed.'
+'Zgrep command is used to search out expressions from a given a file even if 
+it is compressed.'
 
 4. What's the output of following bash script?
 Listing all the csv.gz files contents in /mnt/mimiciv/1.0/core/*.gz directory. 
-    ```{bash, echo=T}
+```{bash, echo=T}
     for datafile in /mnt/mimiciv/1.0/core/*.gz
       do
         ls -l $datafile
       done
-    ```
+```
 Display the number of lines in each data file using a similar loop.
 
-    ```{bash, echo=T}
+Answer: the outcomes for this command are included the header line.
+
+```{bash, echo=T}
     for datafile in /mnt/mimiciv/1.0/core/*.gz
       do
-        wc -l $datafile
+       zcat $datafile | wc -l
       done
-    ```
+```
+
+
 5. Display the first few lines of `admissions.csv.gz`. How many rows are in this data file? How many unique patients (identified by `subject_id`) are in this data file? (Hint: combine Linux commands `zcat`, `head`/`tail`, `awk`, `sort`, `uniq`, `wc`, and so on.)
 ```{bash, echo=T}
 zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | head
 #Display the first few lines of `admissions.csv.gz`.
 ```
 ```{bash, echo=T}
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | wc -l
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | tail -n +2 | wc -l
 #There are 523740 rows (after remove header) in this data file.
 ```
 ```{bash, echo=T}
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $1}' | sort |
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | tail -n +2 | awk -F, '{print $1}' | sort |
 uniq | wc -l
 #There are 256878 (after remove header) unique patients in this data file
 ```
 6. What are the possible values taken by each of the variable `admission_type`, `admission_location`, `insurance`, and `ethnicity`? Also report the count for each unique value of these variables. (Hint: combine Linux commands `zcat`, `head`/`tail`, `awk`, `uniq -c`, `wc`, and so on.)
 ```{bash, echo=T}
 #admission_type
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $6}' | sort |
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | tail -n +2 | awk -F, '{print $6}' | sort |
 uniq -c | wc -l
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $6}' | sort |
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | tail -n +2 | awk -F, '{print $6}' | sort |
 uniq -c | head -10
 #There are 9 unique admission_type value in this data file
 ```
 ```{bash, echo=T}
 #admission_location
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $7}' | sort |
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | tail -n +2 | awk -F, '{print $7}' | sort |
 uniq -c | wc -l
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $7}' | sort |
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | tail -n +2 | awk -F, '{print $7}' | sort |
 uniq -c | head -13
 #There are 12 unique admission_location value in this data file
 ```
 ```{bash, echo=T}
 #insurance
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $9}' | sort |
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | tail -n +2 | awk -F, '{print $9}' | sort |
 uniq -c | wc -l
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $9}' | sort |
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | tail -n +2 | awk -F, '{print $9}' | sort |
 uniq -c | head
 #There are 3 unique insurance value in this data file
 ```
 ```{bash, echo=T}
 #ethnicity
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $12}' | sort |
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | tail -n +2 | awk -F, '{print $12}' | sort |
 uniq -c | wc -l
-zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | awk -F, '{print $12}' | sort |
+zcat /mnt/mimiciv/1.0/core/admissions.csv.gz | tail -n +2 | awk -F, '{print $12}' | sort |
 uniq -c | head
 #There are 8 unique ethnicity value in this data file
 ```
