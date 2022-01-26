@@ -89,10 +89,49 @@ system(
 
 1. Import `icustatys.csv.gz` as a tibble `icustays_tble`. 
 
+**Solution:**
+
+```{r, echo=TRUE}
+#`read_csv` in tidyverse to import icustatys.csv.gz
+icustays_tble <- read_csv("/mnt/mimiciv/1.0/icu/icustays.csv.gz")
+head(icustays_tble)
+```
 2. How many unique `subject_id`? Can a `subject_id` have multiple ICU stays? 
 
+**Solution:**
+
+```{r, echo=TRUE}
+icustays_tble %>%
+  distinct(subject_id) %>%
+    nrow()
+```
+
+There are 53150 unique subject_id in icustays_tble. And, Yes, a subject id can 
+have more than one ICU stays. From the result below, we can see that the maximum 
+time of ICU stays is 37 times for subject is = 18358138.
+
+```{r, echo=TRUE}
+icustays_tble %>%
+  group_by(subject_id) %>%
+    summarise(n=n()) %>%
+      arrange(desc(n)) %>%
+        head()
+```
 3. For each `subject_id`, let's only keep the first ICU stay in the tibble `icustays_tble`.
 
+**Solution:**
+
+From the result below, I checked the rows of this subset will be 53150, which 
+make sense sine every nuique patient had their first record when they 
+transferred to ICU.
+
+```{r, echo=TRUE}
+icustays_tble2 <- icustays_tble %>%
+                    group_by(subject_id) %>%
+                      arrange(intime) %>%
+                        filter(row_number()==1)
+icustays_tble2
+```
 ## Q3. `admission` data
 
 Information of the patients admitted into hospital is available in `admissions.csv.gz`. See <https://mimic.mit.edu/docs/iv/modules/core/admissions/> for details of each field in this file. The first 10 lines are
@@ -109,6 +148,13 @@ system(
 
 1. Import `admissions.csv.gz` as a tibble `admissions_tble`.
 
+**Solution:**
+
+```{r, echo=TRUE}
+#`read_csv` in tidyverse to import
+admissions_tble <- read_csv("/mnt/mimiciv/1.0/core/admissions.csv.gz")
+head(admissions_tble)
+```
 2. Let's only keep the admissions that have a match in `icustays_tble` according to `subject_id` and `hadmi_id`.
 
 3. Summarize the following variables by graphics. 
@@ -134,6 +180,14 @@ system(
 ```
 
 1. Import `patients.csv.gz` (<https://mimic.mit.edu/docs/iv/modules/core/patients/>) as a tibble `patients_tble` and only keep the patients who have a match in `icustays_tble` (according to `subject_id`).
+
+**Solution:**
+
+```{r, echo=TRUE}
+#`read_csv` in tidyverse to import
+patients_tble <- read_csv("/mnt/mimiciv/1.0/core/patients.csv.gz")
+head(patients_tble)
+```
 
 2. Summarize variables `gender` and `anchor_age`, and explain any patterns you see.
 
