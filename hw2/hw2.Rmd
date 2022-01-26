@@ -41,11 +41,35 @@ system(str_c("tree -s -L 2 ", shQuote(mimic_path)), intern = TRUE)
 There are quite a few utilities in R for reading plain text data files. Let us test the speed of reading a moderate sized compressed csv file, `admissions.csv.gz`, by three programs: `read.csv` in base R, `read_csv` in tidyverse, and `fread` in the popular data.table package. 
 
 ```{r, echo=TRUE}
-#compressed csv file, `admissions.csv.gz`
-
+#`read.csv` in base R
+system.time(read.csv("/mnt/mimiciv/1.0/core/admissions.csv.gz"))
+#`read_csv` in tidyverse
+system.time(read_csv("/mnt/mimiciv/1.0/core/admissions.csv.gz"))
+# `fread` in the popular data.table package.
+system.time(fread("/mnt/mimiciv/1.0/core/admissions.csv.gz"))
 ```
 
 Which function is fastest? Is there difference in the (default) parsed data types? (Hint: R function `system.time` measures run times.)
+
+**Solution:**
+
+```{r, echo=TRUE}
+#`read.csv` in base R
+read1 <- read.csv("/mnt/mimiciv/1.0/core/admissions.csv.gz")
+str(read1)
+#`read_csv` in tidyverse
+read2 <- read_csv("/mnt/mimiciv/1.0/core/admissions.csv.gz")
+str(read2)
+# `fread` in the popular data.table package.
+read3 <- fread("/mnt/mimiciv/1.0/core/admissions.csv.gz")
+str(read3)
+```
+
+The fread in the data.table package is the fastest function to read a moderate 
+sized compressed csv file. From the data type table above, we can see that the
+default data type for read_csv and fread are the same. However, the default data
+type for read.csv is differ from the other two function. The data structure all 
+are data.frame, but the class of variable are different.
 
 For later questions, we stick to the tidyverse.
 
