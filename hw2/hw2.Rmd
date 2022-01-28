@@ -257,12 +257,22 @@ patient_icu_combine %>%
   geom_bar(width = 1)
 ```
 
+From the plot above, we can tell that the number of male is larger than female.
+
 ```{r, echo=TRUE}
 #anchor_age
 patient_icu_combine %>%
   ggplot(mapping = aes(x = anchor_age, fill = anchor_age)) + 
   geom_bar(width = 1)
+summary(patient_icu_combine$anchor_age)
 ```
+
+From the plot above, we can tell that the maximum age for the patient is 91, which
+is also the most frequent age in this data. That's weird because it is not possible that
+the number of most frequent age appear in the extreme value. I believe that there must be
+an age transformation for anchor_age. On the other hand, the distribution of the anchor age 
+is left skewed with the median anchor age is 65.
+
 
 ## Q5. Lab results
 
