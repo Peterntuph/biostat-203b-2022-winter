@@ -102,8 +102,8 @@ head(icustays_tble)
 
 ```{r, echo=TRUE}
 icustays_tble %>%
-  distinct(subject_id) %>%
-    nrow()
+distinct(subject_id) %>%
+nrow()
 ```
 
 There are 53150 unique subject_id in icustays_tble. And, Yes, a subject id can 
@@ -112,10 +112,10 @@ time of ICU stays is 37 times for subject is = 18358138.
 
 ```{r, echo=TRUE}
 icustays_tble %>%
-  group_by(subject_id) %>%
-    summarise(n=n()) %>%
-      arrange(desc(n)) %>%
-        head()
+group_by(subject_id) %>%
+summarise(n=n()) %>%
+arrange(desc(n)) %>%
+head()
 ```
 3. For each `subject_id`, let's only keep the first ICU stay in the tibble `icustays_tble`.
 
@@ -126,11 +126,11 @@ make sense sine every nuique patient had their first record when they
 transferred to ICU.
 
 ```{r, echo=TRUE}
-icustays_tble2 <- icustays_tble %>%
-                    group_by(subject_id) %>%
-                      arrange(intime) %>%
-                        filter(row_number()==1)
-icustays_tble2
+icustays_tble_1st_visit <- icustays_tble %>%
+                  group_by(subject_id) %>%
+                  arrange(intime) %>%
+                  filter(row_number()==1)
+icustays_tble_1st_visit
 ```
 ## Q3. `admission` data
 
@@ -151,19 +151,74 @@ system(
 **Solution:**
 
 ```{r, echo=TRUE}
-#`read_csv` in tidyverse to import
 admissions_tble <- read_csv("/mnt/mimiciv/1.0/core/admissions.csv.gz")
 head(admissions_tble)
 ```
 2. Let's only keep the admissions that have a match in `icustays_tble` according to `subject_id` and `hadmi_id`.
 
+**Solution:**
+
+```{r, echo=TRUE}
+ad_icu_combine <-
+  admissions_tble %>% 
+  semi_join(icustays_tble, by = c("subject_id", "hadm_id"))
+```
+
 3. Summarize the following variables by graphics. 
 
+**Solution:**
+
 - admission year  
+
+```{r, echo=TRUE}
+#admission year 
+ad_icu_combine$admittime <- ymd_hms(ad_icu_combine$admittime)
+ad_icu_combine %>% 
+  mutate(year = year(admittime), label = TRUE) %>% 
+  ggplot(aes(x = year)) +
+  geom_bar()
+```
 - admission month  
+
+```{r, echo=TRUE}
+#admission month
+ad_icu_combine %>% 
+  mutate(month = month(admittime), label = TRUE) %>% 
+  ggplot(aes(x = month)) +
+  geom_bar()
+```
 - admission month day  
+
+```{r, echo=TRUE}
+#admission month day
+ad_icu_combine %>% 
+  mutate(mday = mday(admittime), label = TRUE) %>% 
+  ggplot(aes(x = mday)) +
+  geom_bar()
+```
 - admission week day  
+
+```{r, echo=TRUE}
+#admission week day
+ad_icu_combine %>% 
+  mutate(wday = wday(admittime), label = TRUE) %>% 
+  ggplot(aes(x = wday)) +
+  geom_bar()
+```
 - admission hour (anything unusual?)  
+
+```{r, echo=TRUE}
+#admission hour
+ad_icu_combine %>% 
+  mutate(hour = hour(admittime), label = TRUE) %>% 
+  ggplot(aes(x = hour)) +
+  geom_bar()
+```
+
+From the plot above, we can see the trend that the most frequent hour in a day 
+that people got transferred to ICU is during the midnight (00:00 AM-01:00 AM). 
+Moreover, the ICU cases from 15:00 PM to 00:00 AM tend to be higher than the 
+cases number from 01:00 AM to 15:00 PM.
 
 ## Q4. `patients` data
 
@@ -184,12 +239,30 @@ system(
 **Solution:**
 
 ```{r, echo=TRUE}
-#`read_csv` in tidyverse to import
 patients_tble <- read_csv("/mnt/mimiciv/1.0/core/patients.csv.gz")
-head(patients_tble)
+patient_icu_combine <-
+  patients_tble %>% 
+  inner_join(icustays_tble, by = "subject_id")
+patient_icu_combine
 ```
 
 2. Summarize variables `gender` and `anchor_age`, and explain any patterns you see.
+
+**Solution:**
+
+```{r, echo=TRUE}
+#gender
+patient_icu_combine %>%
+  ggplot(mapping = aes(x = gender, fill = gender)) + 
+  geom_bar(width = 1)
+```
+
+```{r, echo=TRUE}
+#anchor_age
+patient_icu_combine %>%
+  ggplot(mapping = aes(x = anchor_age, fill = anchor_age)) + 
+  geom_bar(width = 1)
+```
 
 ## Q5. Lab results
 
