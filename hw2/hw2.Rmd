@@ -122,7 +122,7 @@ head()
 **Solution:**
 
 From the result below, I checked the rows of this subset will be 53150, which 
-make sense sine every nuique patient had their first record when they 
+make sense sine every unique patient had their first record when they 
 transferred to ICU.
 
 ```{r, echo=TRUE}
@@ -242,7 +242,7 @@ system(
 patients_tble <- read_csv("/mnt/mimiciv/1.0/core/patients.csv.gz")
 patient_icu_combine <-
   patients_tble %>% 
-  inner_join(icustays_tble, by = "subject_id")
+  semi_join(icustays_tble, by = "subject_id")
 patient_icu_combine
 ```
 
@@ -301,12 +301,88 @@ system(
 
 1. Find how many rows are in `labevents.csv.gz`.
 
+**Solution:**
+
+```{r, echo=TRUE}
+system(
+  str_c(
+    "zcat < ", 
+    shQuote(str_c(mimic_path, "/hosp/labevents.csv.gz")), 
+    " | tail -n +2 | wc -l"
+    ), 
+  intern = TRUE
+)
+```
+
+There are 122,103,667 rows are in `labevents.csv.gz`.
+
 2. We are interested in the lab measurements of creatinine (50912), potassium (50971), sodium (50983), chloride (50902), bicarbonate (50882), hematocrit (51221), white blood cell count (51301), glucose (50931), magnesium (50960), and calcium (50893). Retrieve a subset of `labevents.csv.gz` only containing these items for the patients in `icustays_tble` as a tibble `labevents_tble`. 
 
     Hint: `labevents.csv.gz` is a data file too big to be read in by the `read_csv` function in its default setting. Utilize the `col_select` and `lazy` options in the `read_csv` function to reduce the memory burden.
+    
+**Solution:**
 
-3. Further restrict `labevents_tble` to the first lab measurement during the ICU stay. 
+```{r, echo=TRUE}
+labevents<- read_csv("/mnt/mimiciv/1.0/hosp/labevents_filtered_itemid.csv.gz")
+labevents
+value_interest <- c("50912", "50971", "50983", "50902", "50882", "51221", 
+                    "51301", "50931", "50960", "50893")
+labevents_tble <-
+  labevents %>% 
+  semi_join(icustays_tble, by = "subject_id") %>%
+  filter(itemid %in% value_interest)
+
+labevents_tble
+```
+
+3. Further restrict `labevents_tble` to the first lab measurement during the ICU stay.
+
+**Solution:**
+
+```{r, echo=TRUE}
+labevents_tble_1st_visit <- labevents_tble %>%
+                  group_by(subject_id) %>%
+                  arrange(charttime) %>%
+                  filter(charttime == min(charttime))
+labevents_tble_1st_visit
+```
+
 4. Summarize the lab measurements by appropriate numerics and graphics. 
+
+**Solution:**
+
+The table shows the count, mean, standard deviation and range for each subject 
+lab measurement during their first ICU stay. Also, the boxplot below shows that
+the Q3, Q1, median and outlier for each lab measurement. However, since the 
+range for glucose (50931), creatinine (50912) and white blood cell count (51301)
+are too large for plotting, I choose to delete the those three itemid to run the
+second boxplot. And the third boxplot is for potassium (50971), magnesium (50960), and calcium (50893).
+
+```{r, echo=TRUE}
+labevents_tble_1st_visit %>%
+  group_by(itemid) %>%
+  summarise(count = n(),
+            mean = mean(valuenum, na.rm = T),
+            sd = sd(valuenum, na.rm = T),
+            range = max(valuenum, na.rm = T) - min(valuenum, na.rm = T))
+
+labevents_tble_1st_visit %>%
+  group_by(itemid) %>%
+  ggplot(mapping = aes(x = as.factor(itemid), y = valuenum)) + 
+         geom_boxplot()
+
+labevents_tble_1st_visit %>%
+  filter(!itemid %in% c("50931", "50912", "51301")) %>%
+  group_by(itemid) %>%
+  ggplot(mapping = aes(x = as.factor(itemid), y = valuenum)) + 
+         geom_boxplot()
+
+labevents_tble_1st_visit %>%
+  filter(itemid %in% c("50893", "50960", "50971")) %>%
+  group_by(itemid) %>%
+  ggplot(mapping = aes(x = as.factor(itemid), y = valuenum)) + 
+         geom_boxplot()
+```
 
 ## Q6. Vitals from charted events
 
