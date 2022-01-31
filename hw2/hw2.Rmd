@@ -341,9 +341,9 @@ labevents_tble
 
 ```{r, echo=TRUE}
 labevents_tble_1st_visit <- labevents_tble %>%
-                  group_by(subject_id) %>%
-                  arrange(charttime) %>%
-                  filter(charttime == min(charttime))
+                            group_by(subject_id) %>%
+                            arrange(charttime) %>%
+                            filter(charttime == min(charttime))
 labevents_tble_1st_visit
 ```
 
@@ -409,9 +409,65 @@ system(
 
 1. We are interested in the vitals for ICU patients: heart rate (220045), mean non-invasive blood pressure (220181), systolic non-invasive blood pressure (220179), body temperature in Fahrenheit (223761), and respiratory rate (220210). Retrieve a subset of `chartevents.csv.gz` only containing these items for the patients in `icustays_tble` as a tibble `chartevents_tble`.
 
+**Solution:**
+
+```{r, echo=TRUE}
+chartevents <- 
+  read_csv("/mnt/mimiciv/1.0/icu/chartevents_filtered_itemid.csv.gz")
+chartevents
+vitals_interest <- c("220045", "220181", "220179", "223761", "220210")
+
+chartevents_tble <-
+  chartevents %>% 
+  semi_join(icustays_tble, by = "subject_id") %>%
+  filter(itemid %in% vitals_interest)
+
+chartevents_tble
+```
+
 2. Further restrict `chartevents_tble` to the first vital measurement during the ICU stay. 
 
+**Solution:**
+
+```{r, echo=TRUE}
+chartevents_tble_1st_visit <- chartevents_tble %>%
+                              group_by(subject_id) %>%
+                              arrange(charttime) %>%
+                              filter(charttime == min(charttime))
+
+chartevents_tble_1st_visit
+```
+
 3. Summarize these vital measurements by appropriate numerics and graphics. 
+
+**Solution:**
+
+The table shows the count, mean, standard deviation and range for each subject 
+lab measurement during their first ICU stay. Also, the boxplot below shows that
+the Q3, Q1, median and outlier for each lab measurement. However, since the 
+range for glucose (50931), creatinine (50912) and white blood cell count (51301)
+are too large for plotting, I choose to delete the those three itemid to run the
+second boxplot. And the third boxplot is for potassium (50971), magnesium (50960), and calcium (50893).
+
+```{r, echo=TRUE}
+chartevents_tble_1st_visit %>%
+  group_by(itemid) %>%
+  summarise(count = n(),
+            mean = mean(valuenum, na.rm = T),
+            sd = sd(valuenum, na.rm = T),
+            range = max(valuenum, na.rm = T) - min(valuenum, na.rm = T))
+
+chartevents_tble_1st_visit %>%
+  group_by(itemid) %>%
+  ggplot(mapping = aes(x = as.factor(itemid), y = valuenum)) + 
+         geom_boxplot()
+
+group_chart <- chartevents_tble_1st_visit %>%
+               spread(key = itemid, value = valuenum)
+
+group_chart
+
+```
 
 ## Q7. Putting things together
 
