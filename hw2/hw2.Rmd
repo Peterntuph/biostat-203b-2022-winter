@@ -351,12 +351,7 @@ labevents_tble_1st_visit
 
 **Solution:**
 
-The table shows the count, mean, standard deviation and range for each subject 
-lab measurement during their first ICU stay. Also, the boxplot below shows that
-the Q3, Q1, median and outlier for each lab measurement. However, since the 
-range for glucose (50931), creatinine (50912) and white blood cell count (51301)
-are too large for plotting, I choose to delete the those three itemid to run the
-second boxplot. And the third boxplot is for potassium (50971), magnesium (50960), and calcium (50893).
+The table shows the count, mean, standard deviation and range of lab measurement for each subject during their first ICU stay. Also, the boxplot below shows that the Q3, Q1, median and outlier for each lab measurement. For graphics, I first used **spread** function to extract each lab measurement into columns. Then, since every lab measurements have different mean and standard deviation, I set the scale on each measurement using their own 5th percentage and 95th percentage. I also remove the outlier in each measurement to ensure the boxplot represent the overall distribution of each measurement. In the end, I applied **grid.arrange** to combine those plots together.
 
 ```{r, echo=TRUE}
 labevents_tble_1st_visit %>%
@@ -366,22 +361,150 @@ labevents_tble_1st_visit %>%
             sd = sd(valuenum, na.rm = T),
             range = max(valuenum, na.rm = T) - min(valuenum, na.rm = T))
 
-labevents_tble_1st_visit %>%
-  group_by(itemid) %>%
-  ggplot(mapping = aes(x = as.factor(itemid), y = valuenum)) + 
-         geom_boxplot()
+group_lab <- labevents_tble_1st_visit %>%
+             mutate(Id= row_number()) %>%
+             spread(key = itemid, value = valuenum)
 
-labevents_tble_1st_visit %>%
-  filter(!itemid %in% c("50931", "50912", "51301")) %>%
-  group_by(itemid) %>%
-  ggplot(mapping = aes(x = as.factor(itemid), y = valuenum)) + 
-         geom_boxplot()
+#rename column creatinine (50912), potassium (50971), sodium (50983), chloride (50902), bicarbonate (50882), hematocrit (51221), white blood cell count (51301), glucose (50931), magnesium (50960), and calcium (50893)
 
-labevents_tble_1st_visit %>%
-  filter(itemid %in% c("50893", "50960", "50971")) %>%
-  group_by(itemid) %>%
-  ggplot(mapping = aes(x = as.factor(itemid), y = valuenum)) + 
-         geom_boxplot()
+group_lab <- group_lab %>%
+             rename(creatinine = `50912`,
+                    potassium = `50971`,
+                    sodium = `50983`,
+                    chloride = `50902`,
+                    bicarbonate = `50882`,
+                    hematocrit = `51221`,
+                    WBC_count = `51301`,
+                    glucose = `50931`,
+                    magnesium = `50960`,
+                    calcium = `50893`)
+
+library(gridExtra)
+
+s1 <- 
+  group_lab %>%
+  ggplot(mapping = aes(x = " ",
+                       y = creatinine)) + 
+         geom_boxplot(color = "lightblue", outlier.shape = NA) +
+         coord_cartesian(ylim = quantile(group_lab$creatinine,
+                                         c(0.05, 0.95),
+                                         na.rm = T)) +
+         theme(axis.title.x=element_blank(),
+               axis.text.x=element_blank(),
+               axis.ticks.x=element_blank())
+
+s2 <- 
+  group_lab %>%
+  ggplot(mapping = aes(x = " ",
+                       y = potassium)) + 
+         geom_boxplot(color = "burlywood2", outlier.shape = NA) +
+         coord_cartesian(ylim = 
+                          quantile(group_lab$potassium,
+                                         c(0.05, 0.95),
+                                         na.rm = T)) +
+         theme(axis.title.x=element_blank(),
+               axis.text.x=element_blank(),
+               axis.ticks.x=element_blank())
+s3 <- 
+  group_lab %>%
+  ggplot(mapping = aes(x = " ",
+                       y = sodium)) + 
+         geom_boxplot(color = "seagreen1", outlier.shape = NA) +
+         coord_cartesian(ylim = 
+                      quantile(group_lab$sodium,
+                                         c(0.05, 0.95),
+                                         na.rm = T)) +
+         theme(axis.title.x=element_blank(),
+               axis.text.x=element_blank(),
+               axis.ticks.x=element_blank())
+s4 <- 
+  group_lab %>%
+  ggplot(mapping = aes(x = " ",
+                       y = chloride)) + 
+         geom_boxplot(color = "mediumpurple1", outlier.shape = NA) +
+         coord_cartesian(ylim = 
+                          quantile(group_lab$chloride,
+                                         c(0.05, 0.95),
+                                         na.rm = T)) +
+         theme(axis.title.x=element_blank(),
+               axis.text.x=element_blank(),
+               axis.ticks.x=element_blank())
+s5 <- 
+  group_lab %>%
+  ggplot(mapping = aes(x = " ",
+                       y = bicarbonate)) + 
+         geom_boxplot(color = "brown1", outlier.shape = NA) +
+         coord_cartesian(ylim = 
+                          quantile(group_lab$bicarbonate,
+                                         c(0.05, 0.95),
+                                         na.rm = T)) +
+         theme(axis.title.x=element_blank(),
+               axis.text.x=element_blank(),
+               axis.ticks.x=element_blank())
+
+s6 <- 
+  group_lab %>%
+  ggplot(mapping = aes(x = " ",
+                       y = hematocrit)) + 
+         geom_boxplot(color = "brown1", outlier.shape = NA) +
+         coord_cartesian(ylim = 
+                          quantile(group_lab$hematocrit,
+                                         c(0.05, 0.95),
+                                         na.rm = T)) +
+         theme(axis.title.x=element_blank(),
+               axis.text.x=element_blank(),
+               axis.ticks.x=element_blank())
+
+s7 <- 
+  group_lab %>%
+  ggplot(mapping = aes(x = " ",
+                       y = WBC_count)) + 
+         geom_boxplot(color = "lightblue", outlier.shape = NA) +
+         coord_cartesian(ylim = quantile(group_lab$WBC_count,
+                                         c(0.05, 0.95),
+                                         na.rm = T)) +
+         theme(axis.title.x=element_blank(),
+               axis.text.x=element_blank(),
+               axis.ticks.x=element_blank())
+s8 <- 
+  group_lab %>%
+  ggplot(mapping = aes(x = " ",
+                       y = glucose)) + 
+         geom_boxplot(color = "burlywood2", outlier.shape = NA) +
+         coord_cartesian(ylim = 
+                          quantile(group_lab$glucose,
+                                         c(0.05, 0.95),
+                                         na.rm = T)) +
+         theme(axis.title.x=element_blank(),
+               axis.text.x=element_blank(),
+               axis.ticks.x=element_blank())
+s9 <- 
+  group_lab %>%
+  ggplot(mapping = aes(x = " ",
+                       y = magnesium)) + 
+         geom_boxplot(color = "seagreen1", outlier.shape = NA) +
+         coord_cartesian(ylim = 
+                      quantile(group_lab$magnesium,
+                                         c(0.05, 0.95),
+                                         na.rm = T)) +
+         theme(axis.title.x=element_blank(),
+               axis.text.x=element_blank(),
+               axis.ticks.x=element_blank())
+s10 <- 
+  group_lab %>%
+  ggplot(mapping = aes(x = " ",
+                       y = calcium)) + 
+         geom_boxplot(color = "mediumpurple1", outlier.shape = NA) +
+         coord_cartesian(ylim = 
+                          quantile(group_lab$calcium,
+                                         c(0.05, 0.95),
+                                         na.rm = T)) +
+         theme(axis.title.x=element_blank(),
+               axis.text.x=element_blank(),
+               axis.ticks.x=element_blank())
+
+grid.arrange(s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, ncol=5, nrow = 2,
+             top = "Boxplot For Each Lab Measurement")
 ```
 
 ## Q6. Vitals from charted events
@@ -442,12 +565,7 @@ chartevents_tble_1st_visit
 
 **Solution:**
 
-The table shows the count, mean, standard deviation and range for each subject 
-lab measurement during their first ICU stay. Also, the boxplot below shows that
-the Q3, Q1, median and outlier for each lab measurement. However, since the 
-range for glucose (50931), creatinine (50912) and white blood cell count (51301)
-are too large for plotting, I choose to delete the those three itemid to run the
-second boxplot. And the third boxplot is for potassium (50971), magnesium (50960), and calcium (50893).
+The table shows the count, mean, standard deviation and range of vital measurement for each subject during their first ICU stay. Also, the boxplot below shows that the Q3, Q1, median and outlier for each vital measurement. For graphics, I used **spread** function to extract each vital measurement into columns (same technique in Q5.4). Then, since every vital measurements have different mean and standard deviation, I set the scale on each measurement using their own 5th percentage and 95th percentage. I also remove the outlier in each measurement to ensure the boxplot represent the overall distribution of each column. In the end, I applied **grid.arrange** to combine those plots together.
 
 ```{r, echo=TRUE}
 chartevents_tble_1st_visit %>%
@@ -457,15 +575,68 @@ chartevents_tble_1st_visit %>%
             sd = sd(valuenum, na.rm = T),
             range = max(valuenum, na.rm = T) - min(valuenum, na.rm = T))
 
-chartevents_tble_1st_visit %>%
-  group_by(itemid) %>%
-  ggplot(mapping = aes(x = as.factor(itemid), y = valuenum)) + 
-         geom_boxplot()
-
 group_chart <- chartevents_tble_1st_visit %>%
                spread(key = itemid, value = valuenum)
 
-group_chart
+#rename column heart rate (220045), mean non-invasive blood pressure (220181), systolic non-invasive blood pressure (220179), body temperature in Fahrenheit (223761), and respiratory rate (220210)
+
+group_chart <- group_chart %>%
+               rename(heart_rate = `220045`,
+                      mean_non_invasive_blood_pressure = `220181`,
+                      systolic_non_invasive_blood_pressure = `220179`,
+                      body_temperature = `223761`,
+                      respiratory_rate = `220210`)
+
+library(gridExtra)
+
+p1 <- 
+  group_chart %>%
+  ggplot(mapping = aes(x = " ",
+                       y = heart_rate)) + 
+         geom_boxplot(color = "lightblue", outlier.shape = NA) +
+         coord_cartesian(ylim = quantile(group_chart$heart_rate,
+                                         c(0.05, 0.95),
+                                         na.rm = T))
+
+p2 <- 
+  group_chart %>%
+  ggplot(mapping = aes(x = " ",
+                       y = mean_non_invasive_blood_pressure)) + 
+         geom_boxplot(color = "burlywood2", outlier.shape = NA) +
+         coord_cartesian(ylim = 
+                          quantile(group_chart$mean_non_invasive_blood_pressure,
+                                         c(0.05, 0.95),
+                                         na.rm = T))
+p3 <- 
+  group_chart %>%
+  ggplot(mapping = aes(x = " ",
+                       y = systolic_non_invasive_blood_pressure)) + 
+         geom_boxplot(color = "seagreen1", outlier.shape = NA) +
+         coord_cartesian(ylim = 
+                      quantile(group_chart$systolic_non_invasive_blood_pressure,
+                                         c(0.05, 0.95),
+                                         na.rm = T))
+p4 <- 
+  group_chart %>%
+  ggplot(mapping = aes(x = " ",
+                       y = body_temperature)) + 
+         geom_boxplot(color = "mediumpurple1", outlier.shape = NA) +
+         coord_cartesian(ylim = 
+                          quantile(group_chart$body_temperature,
+                                         c(0.05, 0.95),
+                                         na.rm = T))
+p5 <- 
+  group_chart %>%
+  ggplot(mapping = aes(x = " ",
+                       y = respiratory_rate)) + 
+         geom_boxplot(color = "brown1", outlier.shape = NA) +
+         coord_cartesian(ylim = 
+                          quantile(group_chart$respiratory_rate,
+                                         c(0.05, 0.95),
+                                         na.rm = T))
+
+grid.arrange(p1, p2, p3, p4, p5, ncol=5, nrow = 1,
+             top = "Boxplot For Each Vital Measurement")
 
 ```
 
