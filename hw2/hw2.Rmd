@@ -102,8 +102,8 @@ head(icustays_tble)
 
 ```{r, echo=TRUE}
 icustays_tble %>%
-distinct(subject_id) %>%
-nrow()
+  distinct(subject_id) %>%
+  nrow()
 ```
 
 There are 53150 unique subject_id in icustays_tble. And, Yes, a subject id can 
@@ -112,10 +112,10 @@ time of ICU stays is 37 times for subject is = 18358138.
 
 ```{r, echo=TRUE}
 icustays_tble %>%
-group_by(subject_id) %>%
-summarise(n=n()) %>%
-arrange(desc(n)) %>%
-head()
+  group_by(subject_id) %>%
+  summarise(n=n()) %>%
+  arrange(desc(n)) %>%
+  head()
 ```
 3. For each `subject_id`, let's only keep the first ICU stay in the tibble `icustays_tble`.
 
@@ -126,11 +126,11 @@ make sense sine every unique patient had their first record when they
 transferred to ICU.
 
 ```{r, echo=TRUE}
-icustays_tble_1st_visit <- icustays_tble %>%
-                  group_by(subject_id) %>%
-                  arrange(intime) %>%
-                  filter(row_number()==1)
-icustays_tble_1st_visit
+icustays_tble <- icustays_tble %>%
+                 group_by(subject_id) %>%
+                 arrange(intime) %>%
+                 filter(row_number()==1)
+icustays_tble
 ```
 ## Q3. `admission` data
 
@@ -323,13 +323,14 @@ There are 122,103,667 rows are in `labevents.csv.gz`.
 **Solution:**
 
 ```{r, echo=TRUE}
-labevents<- read_csv("/mnt/mimiciv/1.0/hosp/labevents_filtered_itemid.csv.gz")
-labevents
+labevents<- 
+  read_csv("/mnt/mimiciv/1.0/hosp/labevents_filtered_itemid.csv.gz", lazy =T)
+
 value_interest <- c("50912", "50971", "50983", "50902", "50882", "51221", 
                     "51301", "50931", "50960", "50893")
 labevents_tble <-
   labevents %>% 
-  semi_join(icustays_tble, by = "subject_id") %>%
+  semi_join(icustays_tble, by = c("subject_id")) %>%
   filter(itemid %in% value_interest)
 
 labevents_tble
@@ -537,7 +538,7 @@ system(
 ```{r, echo=TRUE}
 chartevents <- 
   read_csv("/mnt/mimiciv/1.0/icu/chartevents_filtered_itemid.csv.gz")
-chartevents
+
 vitals_interest <- c("220045", "220181", "220179", "223761", "220210")
 
 chartevents_tble <-
@@ -553,12 +554,12 @@ chartevents_tble
 **Solution:**
 
 ```{r, echo=TRUE}
-chartevents_tble_1st_visit <- chartevents_tble %>%
-                              group_by(subject_id) %>%
-                              arrange(charttime) %>%
-                              filter(charttime == min(charttime))
+chartevents_tble <- chartevents_tble %>%
+                    group_by(subject_id) %>%
+                    arrange(charttime) %>%
+                    filter(charttime==min(charttime))
 
-chartevents_tble_1st_visit
+chartevents_tble
 ```
 
 3. Summarize these vital measurements by appropriate numerics and graphics. 
@@ -568,14 +569,14 @@ chartevents_tble_1st_visit
 The table shows the count, mean, standard deviation and range of vital measurement for each subject during their first ICU stay. Also, the boxplot below shows that the Q3, Q1, median and outlier for each vital measurement. For graphics, I used **spread** function to extract each vital measurement into columns (same technique in Q5.4). Then, since every vital measurements have different mean and standard deviation, I set the scale on each measurement using their own 5th percentage and 95th percentage. I also remove the outlier in each measurement to ensure the boxplot represent the overall distribution of each column. In the end, I applied **grid.arrange** to combine those plots together.
 
 ```{r, echo=TRUE}
-chartevents_tble_1st_visit %>%
+chartevents_tble %>%
   group_by(itemid) %>%
   summarise(count = n(),
             mean = mean(valuenum, na.rm = T),
             sd = sd(valuenum, na.rm = T),
             range = max(valuenum, na.rm = T) - min(valuenum, na.rm = T))
 
-group_chart <- chartevents_tble_1st_visit %>%
+group_chart <- chartevents_tble %>%
                spread(key = itemid, value = valuenum)
 
 #rename column heart rate (220045), mean non-invasive blood pressure (220181), systolic non-invasive blood pressure (220179), body temperature in Fahrenheit (223761), and respiratory rate (220210)
@@ -654,6 +655,41 @@ and columns contain at least following variables
 - first lab measurements during ICU stay  
 - first vital measurements during ICU stay
 - an indicator variable `thirty_day_mort` whether the patient died within 30 days of hospital admission (30 day mortality)
+
+**Solution:**
+
+```{r, echo=TRUE}
+
+#combine with patients.csv.gz (age at admission > 18)
+patient18_icu_combine <-
+  patients_tble %>% 
+  inner_join(icustays_tble, by = "subject_id") %>% 
+  filter(anchor_age > 18)
+
+#combine with admission.csv.gz
+ad_pa_icu_combine <-
+  admissions_tble %>% 
+  inner_join(patient18_icu_combine, by = "subject_id")
+
+#first lab measurements during ICU stay
+ad_pa_icu_lab_combine <-
+  labevents_tble_1st_visit %>% 
+  inner_join(ad_pa_icu_combine, by = "subject_id")
+
+#first vital measurements during ICU stay
+mimic_icu_cohort <-
+  chartevents_tble %>% 
+  inner_join(ad_pa_icu_lab_combine, by = "subject_id")
+
+#an indicator variable `thirty_day_mort`
+mimic_icu_cohort <- 
+  mimic_icu_cohort %>% 
+  mutate(
+  dod2 = coalesce(admittime,dod),
+  day_mort = dod2 - admittime
+)
+
+```
 
 ## Q8. Exploratory data analysis (EDA)
 
