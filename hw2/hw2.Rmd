@@ -362,7 +362,6 @@ labevents_tble
 **Solution:**
 
 The table shows the count, mean, standard deviation and range of lab measurement for each subject during their first ICU stay. Also, the boxplot below shows that the Q3, Q1, median and outlier for each lab measurement. For graphics, I first used **spread** function to extract each lab measurement into columns. Then, since every lab measurements have different mean and standard deviation, I set the scale on each measurement using their own 5th percentage and 95th percentage. I also remove the outlier in each measurement to ensure the boxplot represent the overall distribution of each measurement. In the end, I applied **grid.arrange** to combine those plots together.
-
 ```{r, echo=TRUE}
 labevents_tble %>%
   group_by(itemid) %>%
@@ -370,7 +369,9 @@ labevents_tble %>%
             mean = mean(valuenum, na.rm = T),
             sd = sd(valuenum, na.rm = T),
             range = max(valuenum, na.rm = T) - min(valuenum, na.rm = T))
+```
 
+```{r, echo=TRUE}
 group_lab <- labevents_tble %>%
              mutate(Id= row_number()) %>%
              spread(key = itemid, value = valuenum)
@@ -584,7 +585,6 @@ chartevents_tble
 **Solution:**
 
 The table shows the count, mean, standard deviation and range of vital measurement for each subject during their first ICU stay. Also, the boxplot below shows that the Q3, Q1, median and outlier for each vital measurement. For graphics, I used **spread** function to extract each vital measurement into columns (same technique in Q5.4). Then, since every vital measurements have different mean and standard deviation, I set the scale on each measurement using their own 5th percentage and 95th percentage. I also remove the outlier in each measurement to ensure the boxplot represent the overall distribution of each column. In the end, I applied **grid.arrange** to combine those plots together.
-
 ```{r, echo=TRUE}
 chartevents_tble %>%
   group_by(itemid) %>%
@@ -592,7 +592,9 @@ chartevents_tble %>%
             mean = mean(valuenum, na.rm = T),
             sd = sd(valuenum, na.rm = T),
             range = max(valuenum, na.rm = T) - min(valuenum, na.rm = T))
+```
 
+```{r, echo=TRUE}
 group_chart <- chartevents_tble %>%
                spread(key = itemid, value = valuenum)
 
@@ -750,10 +752,149 @@ Summarize following information using appropriate numerics or graphs.
 
 - `thirty_day_mort` vs demographic variables (ethnicity, language, insurance, marital_status, gender, age at hospital admission)
 
+```{r, echo=TRUE}
+#ethnicity
+mimic_icu_cohort %>% 
+  group_by(thirty_day_mort, ethnicity) %>% 
+  summarise(count = n()) %>% 
+  spread(key = ethnicity , value = count) %>% 
+  rowwise() %>% 
+  mutate(total = sum(c_across("AMERICAN INDIAN/ALASKA NATIVE":"WHITE"),
+                 na.rm = T)) %>% 
+  mutate_at(vars("AMERICAN INDIAN/ALASKA NATIVE":"WHITE"),
+            funs(round(./ total, digits = 3)*100)) %>% 
+  print(width = Inf)
+```
+
+```{r, echo=TRUE}
+#insurance
+mimic_icu_cohort %>% 
+  group_by(thirty_day_mort, insurance) %>% 
+  summarise(count = n()) %>% 
+  spread(key = insurance , value = count) %>% 
+  rowwise() %>% 
+  mutate(total = sum(c_across("Medicaid":"Other"),
+                 na.rm = T)) %>% 
+  mutate_at(vars("Medicaid":"Other"),
+            funs(round(./ total, digits = 3)*100)) %>% 
+  print(width = Inf)
+```
+```{r, echo=TRUE}
+#marital_status
+mimic_icu_cohort %>% 
+  group_by(thirty_day_mort, marital_status) %>% 
+  summarise(count = n()) %>% 
+  spread(key = marital_status , value = count) %>% 
+  rowwise() %>% 
+  mutate(total = sum(c_across("DIVORCED":"<NA>"),
+                 na.rm = T)) %>% 
+  mutate_at(vars("DIVORCED":"<NA>"),
+            funs(round(./ total, digits = 3)*100)) %>% 
+  print(width = Inf)
+```
+
+```{r, echo=TRUE}
+#gender
+mimic_icu_cohort %>% 
+  group_by(thirty_day_mort, gender) %>% 
+  summarise(count = n()) %>% 
+  spread(key = gender , value = count) %>% 
+  rowwise() %>% 
+  mutate(total = sum(c_across("F":"M"),
+                 na.rm = T)) %>% 
+  mutate_at(vars("F":"M"),
+            funs(round(./ total, digits = 3)*100)) %>% 
+  print(width = Inf)
+```
+
+```{r, echo=TRUE}
+mimic_icu_cohort %>%
+         ggplot(mapping = aes(x = " ", y = age_hadm)) + 
+         geom_boxplot(color = "burlywood2", outlier.shape = NA) +
+         facet_wrap( ~ thirty_day_mort, scale="free")
+```
+
 - `thirty_day_mort` vs first lab measurements
 ```{r, echo=TRUE}
-
+#bicarbonate
+mimic_icu_cohort %>%
+         ggplot(mapping = aes(x = " ", y = bicarbonate)) + 
+         geom_boxplot(color = "burlywood2", outlier.shape = NA) +
+         facet_wrap(~thirty_day_mort, scale="free")
 ```
+```{r, echo=TRUE}
+#calcium
+mimic_icu_cohort %>%
+         ggplot(mapping = aes(x = " ", y = calcium)) + 
+         geom_boxplot(color = "mediumpurple1", outlier.shape = NA) +
+         facet_wrap(~thirty_day_mort, scale="free")
+```
+```{r, echo=TRUE}
+#chloride
+mimic_icu_cohort %>%
+         ggplot(mapping = aes(x = " ", y = chloride)) + 
+         geom_boxplot(color = "blue", outlier.shape = NA) +
+         facet_wrap( ~ thirty_day_mort, scale="free")
+```
+
+```{r, echo=TRUE}
+#creatinine
+mimic_icu_cohort %>%
+         ggplot(mapping = aes(x = " ", y = creatinine)) + 
+         geom_boxplot(color = "green", outlier.shape = NA) +
+         facet_wrap(~thirty_day_mort, scale="free")
+```
+
+```{r, echo=TRUE}
+#glucose
+mimic_icu_cohort %>%
+         ggplot(mapping = aes(x = " ", y = glucose)) + 
+         geom_boxplot(color = "mediumpurple1", outlier.shape = NA) +
+         facet_wrap(~thirty_day_mort, scale="free")
+```
+
+
+```{r, echo=TRUE}
+#magnesium
+mimic_icu_cohort %>%
+         ggplot(mapping = aes(x = " ", y = magnesium)) + 
+         geom_boxplot(color = "mediumpurple1", outlier.shape = NA) +
+         facet_wrap(~thirty_day_mort, scale="free")
+```
+
+
+```{r, echo=TRUE}
+#potassium
+mimic_icu_cohort %>%
+         ggplot(mapping = aes(x = " ", y = potassium)) + 
+         geom_boxplot(color = "mediumpurple1", outlier.shape = NA) +
+         facet_wrap(~thirty_day_mort, scale="free")
+```
+
+```{r, echo=TRUE}
+#sodium
+mimic_icu_cohort %>%
+         ggplot(mapping = aes(x = " ", y = sodium)) + 
+         geom_boxplot(color = "navy blue", outlier.shape = NA) +
+         facet_wrap(~thirty_day_mort, scale="free")
+```
+
+```{r, echo=TRUE}
+#hematocrit
+mimic_icu_cohort %>%
+         ggplot(mapping = aes(x = " ", y = hematocrit)) + 
+         geom_boxplot(color = "brown1", outlier.shape = NA) +
+         facet_wrap(~thirty_day_mort, scale="free")
+```
+
+```{r, echo=TRUE}
+#WBC_count
+mimic_icu_cohort %>%
+         ggplot(mapping = aes(x = " ", y = WBC_count)) + 
+         geom_boxplot(color = "mediumpurple1", outlier.shape = NA) +
+         facet_wrap(~thirty_day_mort, scale="free")
+```
+
 - `thirty_day_mort` vs first vital measurements
 
 - `thirty_day_mort` vs first ICU unit
