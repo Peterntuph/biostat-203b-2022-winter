@@ -341,11 +341,20 @@ labevents_tble
 **Solution:**
 
 ```{r, echo=TRUE}
-labevents_tble_1st_visit <- labevents_tble %>%
-                            group_by(subject_id) %>%
-                            arrange(charttime) %>%
-                            filter(charttime == min(charttime))
-labevents_tble_1st_visit
+labevents_tble <- labevents_tble %>%
+                  #pull in intime
+                  left_join(select(icustays_tble,
+                                   intime,
+                                   subject_id), by = "subject_id") %>% 
+                  #only keep first lab measurement after intime
+                  filter(charttime >= intime) %>% 
+                  #for each subject*item
+                  group_by(subject_id, itemid) %>%
+                  #sort time and output first
+                  arrange(charttime, .by_group = T) %>%
+                  slice_head(n = 1) %>%
+                  ungroup()
+labevents_tble
 ```
 
 4. Summarize the lab measurements by appropriate numerics and graphics. 
@@ -355,14 +364,14 @@ labevents_tble_1st_visit
 The table shows the count, mean, standard deviation and range of lab measurement for each subject during their first ICU stay. Also, the boxplot below shows that the Q3, Q1, median and outlier for each lab measurement. For graphics, I first used **spread** function to extract each lab measurement into columns. Then, since every lab measurements have different mean and standard deviation, I set the scale on each measurement using their own 5th percentage and 95th percentage. I also remove the outlier in each measurement to ensure the boxplot represent the overall distribution of each measurement. In the end, I applied **grid.arrange** to combine those plots together.
 
 ```{r, echo=TRUE}
-labevents_tble_1st_visit %>%
+labevents_tble %>%
   group_by(itemid) %>%
   summarise(count = n(),
             mean = mean(valuenum, na.rm = T),
             sd = sd(valuenum, na.rm = T),
             range = max(valuenum, na.rm = T) - min(valuenum, na.rm = T))
 
-group_lab <- labevents_tble_1st_visit %>%
+group_lab <- labevents_tble %>%
              mutate(Id= row_number()) %>%
              spread(key = itemid, value = valuenum)
 
@@ -555,10 +564,18 @@ chartevents_tble
 
 ```{r, echo=TRUE}
 chartevents_tble <- chartevents_tble %>%
-                    group_by(subject_id) %>%
-                    arrange(charttime) %>%
-                    filter(charttime==min(charttime))
-
+                    #pull in intime
+                    left_join(select(icustays_tble,
+                                     intime,
+                                     subject_id), by = "subject_id") %>% 
+                    #only keep first lab measurement after intime
+                    filter(charttime >= intime) %>% 
+                    #for each subject*item
+                    group_by(subject_id, itemid) %>%
+                    #sort time and output first
+                    arrange(charttime, .by_group = T) %>%
+                    slice_head(n = 1) %>%
+                    ungroup()
 chartevents_tble
 ```
 
@@ -659,36 +676,72 @@ and columns contain at least following variables
 **Solution:**
 
 ```{r, echo=TRUE}
-
-#combine with patients.csv.gz (age at admission > 18)
-patient18_icu_combine <-
-  patients_tble %>% 
-  inner_join(icustays_tble, by = "subject_id") %>% 
-  filter(anchor_age > 18)
+#combine with patients.csv.gz
+patient_icu_combine <-
+  icustays_tble %>% 
+  left_join(patients_tble, by = "subject_id")
 
 #combine with admission.csv.gz
 ad_pa_icu_combine <-
   admissions_tble %>% 
-  inner_join(patient18_icu_combine, by = "subject_id")
+  left_join(patient_icu_combine, by = c("subject_id", "hadm_id"))
+
+#rename itemid and valuenum for lab measurement
+labevents_tble <- labevents_tble %>% 
+  rename(lab_item = itemid,
+         lab_value = valuenum) 
 
 #first lab measurements during ICU stay
 ad_pa_icu_lab_combine <-
-  labevents_tble_1st_visit %>% 
-  inner_join(ad_pa_icu_combine, by = "subject_id")
+  labevents_tble %>% 
+  subset(select = -charttime) %>% 
+  left_join(ad_pa_icu_combine, by = c("subject_id", "intime")) %>% 
+  spread(key = lab_item, value = lab_value)
+
+#rename itemid and valuenum for vital measurement
+chartevents_tble <- chartevents_tble %>% 
+  rename(vital_item = itemid,
+         vital_value = valuenum)
 
 #first vital measurements during ICU stay
 mimic_icu_cohort <-
   chartevents_tble %>% 
-  inner_join(ad_pa_icu_lab_combine, by = "subject_id")
+  subset(select = -charttime) %>% 
+  left_join(ad_pa_icu_lab_combine, by = c("subject_id",
+                                           "intime",
+                                           "hadm_id",
+                                           "stay_id")) %>% 
+    spread(key = vital_item, value = vital_value)
 
+#(age at admission > 18)
 #an indicator variable `thirty_day_mort`
 mimic_icu_cohort <- 
   mimic_icu_cohort %>% 
-  mutate(
-  dod2 = coalesce(admittime,dod),
-  day_mort = dod2 - admittime
-)
+  mutate(age_hadm = anchor_age + year(admittime) - anchor_year) %>% 
+  filter(age_hadm > 18) %>% 
+  mutate(thirty_day_mort = ifelse(as.Date(deathtime) - as.Date(admittime) > 30,
+                                  1,0))
 
+#rename the lab_item and vital_item
+mimic_icu_cohort <- 
+  mimic_icu_cohort %>%
+  rename(heart_rate = `220045`,
+         mean_non_invasive_blood_pressure = `220181`,
+         systolic_non_invasive_blood_pressure = `220179`,
+         body_temperature = `223761`,
+         respiratory_rate = `220210`,
+         creatinine = `50912`,
+         potassium = `50971`,
+         sodium = `50983`,
+         chloride = `50902`,
+         bicarbonate = `50882`,
+         hematocrit = `51221`,
+         WBC_count = `51301`,
+         glucose = `50931`,
+         magnesium = `50960`,
+         calcium = `50893`)
+
+mimic_icu_cohort
 ```
 
 ## Q8. Exploratory data analysis (EDA)
@@ -698,7 +751,9 @@ Summarize following information using appropriate numerics or graphs.
 - `thirty_day_mort` vs demographic variables (ethnicity, language, insurance, marital_status, gender, age at hospital admission)
 
 - `thirty_day_mort` vs first lab measurements
+```{r, echo=TRUE}
 
+```
 - `thirty_day_mort` vs first vital measurements
 
 - `thirty_day_mort` vs first ICU unit
