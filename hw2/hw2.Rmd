@@ -585,6 +585,7 @@ chartevents_tble
 **Solution:**
 
 The table shows the count, mean, standard deviation and range of vital measurement for each subject during their first ICU stay. Also, the boxplot below shows that the Q3, Q1, median and outlier for each vital measurement. For graphics, I used **spread** function to extract each vital measurement into columns (same technique in Q5.4). Then, since every vital measurements have different mean and standard deviation, I set the scale on each measurement using their own 5th percentage and 95th percentage. I also remove the outlier in each measurement to ensure the boxplot represent the overall distribution of each column. In the end, I applied **grid.arrange** to combine those plots together.
+
 ```{r, echo=TRUE}
 chartevents_tble %>%
   group_by(itemid) %>%
@@ -766,6 +767,12 @@ mimic_icu_cohort %>%
   print(width = Inf)
 ```
 
+**Solution:**
+
+From the above table I made, it shows that the proportion of ethnicity in those three groups of thirty_day_mort.
+As we can see that the value of proportion has similar pattern within each group. I believe that if we conduct 
+a proportion test, its p value should be >= .05 which means that those three group should have same pattern in ethnicity.
+
 ```{r, echo=TRUE}
 #insurance
 mimic_icu_cohort %>% 
@@ -779,6 +786,13 @@ mimic_icu_cohort %>%
             funs(round(./ total, digits = 3)*100)) %>% 
   print(width = Inf)
 ```
+
+**Solution:**
+
+From the above table I made, it shows that the proportion of insurance in those three groups of thirty_day_mort.
+As we can see that the value of patient who died within 30 days of hospital admission have higher proportion on 
+choosing Medicaid (12.2%) compare to other two groups.
+
 ```{r, echo=TRUE}
 #marital_status
 mimic_icu_cohort %>% 
@@ -792,6 +806,11 @@ mimic_icu_cohort %>%
             funs(round(./ total, digits = 3)*100)) %>% 
   print(width = Inf)
 ```
+
+**Solution:**
+
+From the above table I made, it shows that the proportion of marital_status in those three groups of thirty_day_mort.
+As we can see that the value of patient who died after 30 days of hospital admission (thirty_day_mort = 0) have different pattern compare to other two groups, which included higher proportion on WIDOWED, NA and lower proportion on SINGLE and MARRIED.
 
 ```{r, echo=TRUE}
 #gender
@@ -807,12 +826,29 @@ mimic_icu_cohort %>%
   print(width = Inf)
 ```
 
+**Solution:**
+
+From the above table I made, it shows that the proportion of gender in those three groups of thirty_day_mort.
+As we can see that the value of proportion has similar pattern within each group. I believe that if we conduct 
+a proportion test, its p value should be >= .05 which means that those three group should have same pattern in gender
+
 ```{r, echo=TRUE}
+#age at hospital admission
 mimic_icu_cohort %>%
          ggplot(mapping = aes(x = " ", y = age_hadm)) + 
          geom_boxplot(color = "burlywood2", outlier.shape = NA) +
-         facet_wrap( ~ thirty_day_mort, scale="free")
+         facet_wrap( ~ thirty_day_mort, scale="free") +
+         coord_cartesian(ylim = 
+                         quantile(mimic_icu_cohort$age_hadm,
+                                  c(0.05, 0.95),
+                                  na.rm = T))
 ```
+
+**Solution:**
+
+From the graphic I made above, it shows that the boxplot of age at hospital admission in those three groups of thirty_day_mort.
+Although we can see that the value of age at hospital admission of patient who died after 30 days of hospital admission
+(thirty_day_mort = 0) have higher mean, I believe that they still have similar pattern within each group.
 
 - `thirty_day_mort` vs first lab measurements
 ```{r, echo=TRUE}
@@ -820,82 +856,293 @@ mimic_icu_cohort %>%
 mimic_icu_cohort %>%
          ggplot(mapping = aes(x = " ", y = bicarbonate)) + 
          geom_boxplot(color = "burlywood2", outlier.shape = NA) +
-         facet_wrap(~thirty_day_mort, scale="free")
+         facet_wrap(~thirty_day_mort, scale="free") +
+         coord_cartesian(ylim = 
+                         quantile(mimic_icu_cohort$bicarbonate,
+                                  c(0.05, 0.95),
+                                  na.rm = T))
 ```
+
+**Solution:**
+
+From the graphic I made above, it shows that the boxplot of first lab measurements on bicarbonate in those three groups of 
+thirty_day_mort. We can see that the value of first lab measurements on bicarbonate of patient who died within 30 days of 
+hospital admission (thirty_day_mort = 1) have higher mean, Q1, and Q3.
+
+
 ```{r, echo=TRUE}
 #calcium
 mimic_icu_cohort %>%
          ggplot(mapping = aes(x = " ", y = calcium)) + 
          geom_boxplot(color = "mediumpurple1", outlier.shape = NA) +
-         facet_wrap(~thirty_day_mort, scale="free")
+         facet_wrap(~thirty_day_mort, scale="free") +
+         coord_cartesian(ylim = 
+                         quantile(mimic_icu_cohort$calcium,
+                                  c(0.05, 0.95),
+                                  na.rm = T))
 ```
+
+**Solution:**
+
+From the graphic I made above, it shows that the boxplot of first lab measurements on calcium in those three groups of 
+thirty_day_mort. We can see that the value of first lab measurements on calcium of patient who died after 30 days of 
+hospital admission (thirty_day_mort = 0) have higher mean.
+
 ```{r, echo=TRUE}
 #chloride
 mimic_icu_cohort %>%
          ggplot(mapping = aes(x = " ", y = chloride)) + 
          geom_boxplot(color = "blue", outlier.shape = NA) +
-         facet_wrap( ~ thirty_day_mort, scale="free")
+         facet_wrap( ~ thirty_day_mort, scale="free") +
+         coord_cartesian(ylim = 
+                         quantile(mimic_icu_cohort$chloride,
+                                  c(0.05, 0.95),
+                                  na.rm = T))
 ```
+
+**Solution:**
+
+From the graphic I made above, it shows that the boxplot of first lab measurements on chloride in those three groups of 
+thirty_day_mort. We can see that the value of first lab measurements on chloride of patient who died after 30 days of 
+hospital admission (thirty_day_mort = 0) have same mean, Q1 and Q3 as thirty_day_mort = 1.
 
 ```{r, echo=TRUE}
 #creatinine
 mimic_icu_cohort %>%
          ggplot(mapping = aes(x = " ", y = creatinine)) + 
          geom_boxplot(color = "green", outlier.shape = NA) +
-         facet_wrap(~thirty_day_mort, scale="free")
+         facet_wrap(~thirty_day_mort, scale="fixed") +
+         coord_cartesian(ylim = 
+                         quantile(mimic_icu_cohort$creatinine,
+                                  c(0.05, 0.95),
+                                  na.rm = T))
 ```
+
+**Solution:**
+
+From the graphic I made above, it shows that the boxplot of first lab measurements on creatinine in those three groups of 
+thirty_day_mort. We can see that the value of first lab measurements on creatinine of patient who don't died 
+(thirty_day_mort = NA) have lowest mean, Q1 and Q3 compare to thirty_day_mort = 0 and 1.
 
 ```{r, echo=TRUE}
 #glucose
 mimic_icu_cohort %>%
          ggplot(mapping = aes(x = " ", y = glucose)) + 
          geom_boxplot(color = "mediumpurple1", outlier.shape = NA) +
-         facet_wrap(~thirty_day_mort, scale="free")
+         facet_wrap(~thirty_day_mort, scale="free") +
+         coord_cartesian(ylim = 
+                         quantile(mimic_icu_cohort$glucose,
+                                  c(0.05, 0.95),
+                                  na.rm = T))
 ```
 
+**Solution:**
+
+From the graphic I made above, it shows that the boxplot of first lab measurements on glucose in those three groups of 
+thirty_day_mort. We can see that the value of first lab measurements on glucose of patient who don't died 
+(thirty_day_mort = NA) have lowest mean, Q1 and Q3 compare to thirty_day_mort = 0 and 1.
 
 ```{r, echo=TRUE}
 #magnesium
 mimic_icu_cohort %>%
          ggplot(mapping = aes(x = " ", y = magnesium)) + 
          geom_boxplot(color = "mediumpurple1", outlier.shape = NA) +
-         facet_wrap(~thirty_day_mort, scale="free")
+         facet_wrap(~thirty_day_mort, scale="free") +
+         coord_cartesian(ylim = 
+                         quantile(mimic_icu_cohort$magnesium,
+                                  c(0.05, 0.95),
+                                  na.rm = T))
 ```
 
+**Solution:**
+
+From the graphic I made above, it shows that the boxplot of first lab measurements on magnesium in those three groups of 
+thirty_day_mort. We can see that the value of first lab measurements on magnesium of patient who don't died 
+(thirty_day_mort = NA) have same pattern compare to thirty_day_mort = 0 and 1.
 
 ```{r, echo=TRUE}
 #potassium
 mimic_icu_cohort %>%
          ggplot(mapping = aes(x = " ", y = potassium)) + 
          geom_boxplot(color = "mediumpurple1", outlier.shape = NA) +
-         facet_wrap(~thirty_day_mort, scale="free")
+         facet_wrap(~thirty_day_mort, scale="free") +
+         coord_cartesian(ylim = 
+                         quantile(mimic_icu_cohort$potassium,
+                                  c(0.05, 0.95),
+                                  na.rm = T))
 ```
+
+**Solution:**
+
+From the graphic I made above, it shows that the boxplot of first lab measurements on potassium in those three groups of 
+thirty_day_mort. We can see that the value of first lab measurements on potassium of patient who don't died 
+(thirty_day_mort = NA) have same pattern compare to thirty_day_mort = 0 and 1.
 
 ```{r, echo=TRUE}
 #sodium
 mimic_icu_cohort %>%
          ggplot(mapping = aes(x = " ", y = sodium)) + 
          geom_boxplot(color = "navy blue", outlier.shape = NA) +
-         facet_wrap(~thirty_day_mort, scale="free")
+         facet_wrap(~thirty_day_mort, scale="free") +
+         coord_cartesian(ylim = 
+                         quantile(mimic_icu_cohort$sodium,
+                                  c(0.05, 0.95),
+                                  na.rm = T))
 ```
+
+**Solution:**
+
+From the graphic I made above, it shows that the boxplot of first lab measurements on sodium in those three groups of 
+thirty_day_mort. We can see that the value of first lab measurements on sodium of patient who don't died 
+(thirty_day_mort = NA) have same pattern compare to thirty_day_mort = 0 and 1.
 
 ```{r, echo=TRUE}
 #hematocrit
 mimic_icu_cohort %>%
          ggplot(mapping = aes(x = " ", y = hematocrit)) + 
          geom_boxplot(color = "brown1", outlier.shape = NA) +
-         facet_wrap(~thirty_day_mort, scale="free")
+         facet_wrap(~thirty_day_mort, scale="free") +
+         coord_cartesian(ylim = 
+                         quantile(mimic_icu_cohort$hematocrit,
+                                  c(0.05, 0.95),
+                                  na.rm = T))
 ```
+
+**Solution:**
+
+From the graphic I made above, it shows that the boxplot of first lab measurements on hematocrit in those three groups of 
+thirty_day_mort. We can see that the value of first lab measurements on hematocrit of patient who died within 30 days of 
+hospital admission (thirty_day_mort = 1) have lower mean, Q1, and Q3.
 
 ```{r, echo=TRUE}
 #WBC_count
 mimic_icu_cohort %>%
          ggplot(mapping = aes(x = " ", y = WBC_count)) + 
          geom_boxplot(color = "mediumpurple1", outlier.shape = NA) +
-         facet_wrap(~thirty_day_mort, scale="free")
+         facet_wrap(~thirty_day_mort, scale="free") +
+         coord_cartesian(ylim = 
+                         quantile(mimic_icu_cohort$WBC_count,
+                                  c(0.05, 0.95),
+                                  na.rm = T))
 ```
+
+**Solution:**
+
+From the graphic I made above, it shows that the boxplot of first lab measurements on WBC_count in those three groups of 
+thirty_day_mort. We can see that the value of first lab measurements on WBC_count of patient who died after 30 days of 
+hospital admission (thirty_day_mort = 0) have higher mean, Q1, and Q3.
 
 - `thirty_day_mort` vs first vital measurements
 
+```{r, echo=TRUE}
+#heart_rate
+mimic_icu_cohort %>%
+         ggplot(mapping = aes(x = " ", y = heart_rate)) + 
+         geom_boxplot(color = "burlywood2", outlier.shape = NA) +
+         facet_wrap(~thirty_day_mort, scale="free") +
+         coord_cartesian(ylim = 
+                         quantile(mimic_icu_cohort$heart_rate,
+                                  c(0.05, 0.95),
+                                  na.rm = T))
+```
+
+**Solution:**
+
+From the graphic I made above, it shows that the boxplot of first vital measurements on heart_rate in those three groups of 
+thirty_day_mort. We can see that the value of first vital measurements on heart_rate of patient who died within 30 days of 
+hospital admission (thirty_day_mort = 1) have higher mean, Q1, and Q3.
+
+```{r, echo=TRUE}
+#mean_non_invasive_blood_pressure
+mimic_icu_cohort %>%
+         ggplot(mapping = aes(x = " ", y = mean_non_invasive_blood_pressure)) + 
+         geom_boxplot(color = "mediumpurple1", outlier.shape = NA) +
+         facet_wrap( ~ thirty_day_mort, scale="free") +
+         coord_cartesian(ylim = 
+         quantile(mimic_icu_cohort$mean_non_invasive_blood_pressure,
+                  c(0.05, 0.95),
+                  na.rm = T))
+```
+
+**Solution:**
+
+From the graphic I made above, it shows that the boxplot of first vital measurements on mean_non_invasive_blood_pressure in those
+three groups of thirty_day_mort. We can see that the value of first vital measurements on mean_non_invasive_blood_pressure of
+patient who died within 30 days of hospital admission (thirty_day_mort = 1) have lower mean, Q1, and Q3.
+
+```{r, echo=TRUE}
+#systolic_non_invasive_blood_pressure
+mimic_icu_cohort %>%
+         ggplot(mapping = aes(x = " ", y = systolic_non_invasive_blood_pressure)) + 
+         geom_boxplot(color = "brown1", outlier.shape = NA) +
+         facet_wrap(~thirty_day_mort, scale="free") +
+         coord_cartesian(ylim = 
+         quantile(mimic_icu_cohort$systolic_non_invasive_blood_pressure,
+                  c(0.05, 0.95),
+                  na.rm = T))
+```
+
+**Solution:**
+
+From the graphic I made above, it shows that the boxplot of first vital measurements on systolic_non_invasive_blood_pressure in 
+those three groups of thirty_day_mort. We can see that the value of first vital measurements on 
+systolic_non_invasive_blood_pressure of patient who died within 30 days of hospital admission (thirty_day_mort = 1) have lower 
+mean, Q1, and Q3.
+
+```{r, echo=TRUE}
+#body_temperture
+mimic_icu_cohort %>%
+         ggplot(mapping = aes(x = " ", y = body_temperature)) + 
+         geom_boxplot(color = "navy blue", outlier.shape = NA) +
+         facet_wrap(~thirty_day_mort, scale="free") +
+         coord_cartesian(ylim = 
+                          quantile(mimic_icu_cohort$body_temperature,
+                                   c(0.05, 0.95),
+                                   na.rm = T))
+```
+
+**Solution:**
+
+From the graphic I made above, it shows that the boxplot of first vital measurements on body_temperture in those three groups of 
+thirty_day_mort. We can see that the value of first vital measurements on body_temperture of patient who don't died 
+(thirty_day_mort = NA) have same pattern compare to thirty_day_mort = 0 and 1.
+
+```{r, echo=TRUE}
+#respiratory_rate
+mimic_icu_cohort %>%
+         ggplot(mapping = aes(x = " ", y = respiratory_rate)) + 
+         geom_boxplot(color = "green", outlier.shape = NA) +
+         facet_wrap(~thirty_day_mort, scale="free") +
+         coord_cartesian(ylim = 
+                          quantile(mimic_icu_cohort$respiratory_rate,
+                                   c(0.05, 0.95),
+                                   na.rm = T))
+```
+
+**Solution:**
+
+From the graphic I made above, it shows that the boxplot of first vital measurements on respiratory_rate in those three groups of
+thirty_day_mort. We can see that the value of first vital measurements on respiratory_rate of patient who don't died 
+(thirty_day_mort = NA) have lower mean, Q1 and Q3 compare to thirty_day_mort = 0 and 1.
+
 - `thirty_day_mort` vs first ICU unit
+```{r, echo=TRUE}
+#first_careunit
+mimic_icu_cohort %>% 
+  group_by(thirty_day_mort, first_careunit) %>% 
+  summarise(count = n()) %>% 
+  spread(key = first_careunit , value = count) %>% 
+  rowwise() %>% 
+  mutate(total = sum(c_across("Cardiac Vascular Intensive Care Unit (CVICU)":
+                                "Trauma SICU (TSICU)"),
+                 na.rm = T)) %>% 
+  mutate_at(vars("Cardiac Vascular Intensive Care Unit (CVICU)":
+                   "Trauma SICU (TSICU)"),
+            funs(round(./ total, digits = 3)*100)) %>% 
+  print(width = Inf)
+```
+
+**Solution:**
+
+From the above table I made, it shows that the proportion of first_careunit in those three groups of thirty_day_mort.
 
