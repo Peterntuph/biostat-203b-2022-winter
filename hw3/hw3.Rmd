@@ -116,7 +116,7 @@ labevents_tble <- tbl(con, "labevents") %>%
   show_query() %>%
   print(width = Inf)
 
-labevents_tble <- labevents_tble %>% 
+labevents_tble <- labevents_tble %>%
   semi_join(icustays_tble, by = c("subject_id")) %>%
   filter(itemid %in% c(50912, 
                        50971, 
@@ -134,23 +134,31 @@ labevents_tble <- labevents_tble %>%
 Only keep the first lab measurements during ICU stay and pivot lab items to become variables/columns.
 
 ```{r}
-labevents_tble <- labevents_tble %>% 
+labevents_tble <- labevents_tble %>%
   left_join(select(icustays_tble, subject_id, intime),
             by = c("subject_id")) %>%
   filter(charttime >= intime) %>%
   group_by(subject_id, itemid) %>% 
   arrange(charttime, .by_group = T) %>% 
   summarise_all(min) %>%
-  select(-charttime, -intime) %>% 
+  select(subject_id, itemid, valuenum) %>% 
   ungroup() %>% 
   show_query() %>%
   print(width = Inf)
 
-####
 labevents_tble <- labevents_tble %>%
+  pivot_wider(names_from = "itemid", values_from = "valuenum") %>%
+             rename(creatinine = `50912`,
+                    potassium = `50971`,
+                    sodium = `50983`,
+                    chloride = `50902`,
+                    bicarbonate = `50882`,
+                    hematocrit = `51221`,
+                    WBC_count = `51301`,
+                    glucose = `50931`,
+                    magnesium = `50960`,
+                    calcium = `50893`) %>%
   collect() %>% 
-  mutate(Id= row_number()) %>% 
-  pivot_wider(names_from = itemid, values_from = valuenum) %>%
   print(width = Inf)
 ```
 
