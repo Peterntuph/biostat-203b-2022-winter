@@ -6,7 +6,6 @@ library(dplyr)
 library(readr)
 
 # Load data
-setwd("/home/khyeh0816/biostat-203b-2022-winter/hw3/mimiciv_shiny")
 icu_cohort <- readRDS("icu_cohort.rds")
 
 #select demographics, lab measurements, vitals
