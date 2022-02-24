@@ -24,9 +24,12 @@ ui <- fluidPage(
     sidebarLayout(
       sidebarPanel(
         helpText("Select a variable to have a deeper understanding."),
-        varSelectInput("variable", "Choose a variable:", icu_cohort),
+        varSelectInput("variable",
+                       "Choose a variable:",
+                       icu_cohort,
+                       selected = "marital_status"),
         hr(),
-        helpText("Data from Medical Information Mart for Intensive Care")
+        helpText("Data from Medical Information Mart for Intensive Care(MIMIC)")
       ),
       # Show a bar plot or box plot and summary stat
       mainPanel(
