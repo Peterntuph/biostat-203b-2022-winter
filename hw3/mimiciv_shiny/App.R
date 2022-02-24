@@ -54,23 +54,29 @@ server <- function(input, output){
                                       fill = input$variable))
                      
     }else {
+      ## revise
       ggplot(data = icu_cohort) + 
         geom_boxplot(mapping = aes_string(x = input$variable), 
                      color = "burlywood2", 
-                     outlier.shape = NA)
+                     outlier.shape = NA) +
+        coord_cartesian(xlim = c(boxplot.stats(var()[,1])[[1]][1],
+                                 boxplot.stats(var()[,1])[[1]][5]))
     }
     
   })
   
   
   output$Contents <- renderTable({
+    #show head of data
     head(var())
   })
   
   output$Summary <- renderPrint({
     if (summary(var())[2] == "Class :character  "){
+      #if it's character then we use table to summarize
       table(var())
     }else{
+      #if it's continuous data then we use summary()
       summary(var())
     }
   })
