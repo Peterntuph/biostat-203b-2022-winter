@@ -57,7 +57,40 @@ Step. 3 This process is continued until all specified variables have been impute
 
 3. Perform a data quality check of the ICU stays data. Discard variables with substantial missingness, say >5000 `NA`s. Replace apparent data entry errors by `NA`s.
 
+```{r, echo = T}
+icu_stay <- readRDS("../hw3/mimiciv_shiny/icu_cohort.rds")
+icu_stay$thirty_day_mort <- 
+  ifelse(is.na(icu_stay$thirty_day_mort) == T, 0, icu_stay$thirty_day_mort)
+
+summary(icu_stay)
+
+#From the summary table, we decide to drop the variables with substantial missingness, say >5000 NAs
+#drop "deathtime", "edregtime", "edouttime", "dod"
+icu_stay <- icu_stay %>% 
+  select(-c("deathtime", "edregtime", "edouttime", "dod"))
+
+#replace lab and vital measurements to NA
+for (var in colnames(icu_stay[,24:38])){
+ icu_stay[[var]][icu_stay[[var]] %in% boxplot.stats(icu_stay[[var]])$out] <- NA
+}
+
+colSums(is.na(icu_stay[,24:38]))
+```
+
 4. Impute missing values by `miceRanger` (request $m=3$ data sets). This step is computational intensive. Make sure to save the imputation results as a file. Hint: Setting `max.depth=10` in the `miceRanger` function may cut some computing time.
+
+```{r, echo = T}
+seqTime <- system.time(
+  miceObj <- miceRanger(
+      icu_stay
+    , m=3
+    , returnModels = TRUE
+    , verbose=FALSE
+    , max.depth=10
+  )
+)
+miceObj
+```
 
 5. Make imputation diagnostic plots and explain what they mean.
 
