@@ -53,8 +53,6 @@ Step. 2 The random forest (or linear regression) is used to predict each variabl
 
 Step. 3 This process is continued until all specified variables have been imputed. The MICE finished and the correlation between some variables will be much closer to original data.
 
-![image](https://github.com/FarrellDay/miceRanger/blob/master/vignettes/MICEalgorithm.png)
-
 3. Perform a data quality check of the ICU stays data. Discard variables with substantial missingness, say >5000 `NA`s. Replace apparent data entry errors by `NA`s.
 
 ```{r, echo = T}
@@ -84,7 +82,7 @@ seqTime <- system.time(
   miceObj <- miceRanger(
       icu_stay
     , m=3
-    , returnModels = TRUE
+    , returnModels = FALSE
     , verbose=FALSE
     , max.depth=10
   )
@@ -97,6 +95,13 @@ completeData(miceObj)[3] %>% write_rds(file = "../hw4/icu_cohort_3.rds")
 ```
 
 5. Make imputation diagnostic plots and explain what they mean.
+
+```{r, echo = T}
+plotDistributions(miceObj,vars='allNumeric')
+plotCorrelations(miceObj,vars='allNumeric')
+plotVarConvergence(miceObj,vars='allNumeric')
+plotModelError(miceObj,vars='allNumeric')
+```
 
 6. Choose one of the imputed data sets to be used in Q2. This is **not** a good idea to use just one imputed data set or to average multiple imputed data sets. Explain in a couple of sentences what the correct Multiple Imputation strategy is.
 
