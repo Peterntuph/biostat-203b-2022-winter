@@ -98,12 +98,33 @@ completeData(miceObj)[3] %>% write_rds(file = "../hw4/icu_cohort_3.rds")
 
 ```{r, echo = T}
 plotDistributions(miceObj,vars='allNumeric')
+```
+
+From the plot, we can see the imputed distributions compared to the original distribution for each variable. The red line is the density of the original, nonmissing data while the little black line are the density of the imputed values in each of imputed datasets. If they are not matched up, then it tells us that it was not Missing Completely at Random (MCAR). Thus, we can tell that only magnesium, calcium, glucose, body_temperture, heart_rate, and respiratory_rate look like MCAR.
+
+```{r, echo = T}
 plotCorrelations(miceObj,vars='allNumeric')
+```
+
+From the plot of Convergence of Correlation, we can visualize how values between datasets converged over the iterations. 
+
+```{r, echo = T}
 plotVarConvergence(miceObj,vars='allNumeric')
+```
+
+From the plot of Center and Dispersion Convergence, we would like to make sure whether dataset converge to the true theoretical mean. It doesn’t look like this dataset had a convergence issue.
+
+```{r, echo = T}
 plotModelError(miceObj,vars='allNumeric')
 ```
 
+From the plot above, it looks like the variables were imputed with a reasonable degree of accuracy. However, for the respiratory_rate and mean_non_invasive_blood_pressure did not do well on the r-squared.
+
 6. Choose one of the imputed data sets to be used in Q2. This is **not** a good idea to use just one imputed data set or to average multiple imputed data sets. Explain in a couple of sentences what the correct Multiple Imputation strategy is.
+
+```{r, echo = T}
+
+```
 
 ## Q2. Predicting 30-day mortality
 
