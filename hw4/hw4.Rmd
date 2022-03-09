@@ -90,6 +90,10 @@ seqTime <- system.time(
   )
 )
 miceObj
+miceObj %>% write_rds(file = "../hw4/icu_cohort.rds")
+completeData(miceObj)[1] %>% write_rds(file = "../hw4/icu_cohort_1.rds")
+completeData(miceObj)[2] %>% write_rds(file = "../hw4/icu_cohort_2.rds")
+completeData(miceObj)[3] %>% write_rds(file = "../hw4/icu_cohort_3.rds")
 ```
 
 5. Make imputation diagnostic plots and explain what they mean.
