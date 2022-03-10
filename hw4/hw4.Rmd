@@ -136,7 +136,8 @@ icu_cohort_2 <- readRDS("~/biostat-203b-2022-winter/hw4/icu_cohort_2.rds")
 
 #Data split
 set.seed(12345)
-icu_split <- initial_split(icu_cohort_2$Dataset_2, prop = 0.8, strata = thirty_day_mort)
+icu_split <- initial_split(icu_cohort_2$Dataset_2, prop = 0.8
+                           , strata = thirty_day_mort)
 icu_train <- icu_split %>% training()
 icu_test <- icu_split %>% testing()
 rm(icu_cohort_2)
@@ -150,7 +151,60 @@ rm(icu_split)
 model1 <- glm(thirty_day_mort ~ ., data = icu_train
               , family = binomial(link="logit"))
 
+#Random Forest
+library(randomForest)
+
+fit <- randomForest(thirty_day_mort ~ ., data=icu_train
+                    , maxnodes=4
+                    , ntree=30
+                    , norm.votes=FALSE
+                    )
 ```
 
 3. Compare model prediction performance on the test set.
 
+```{r, echo = T}
+# Probability and class preds
+library(caret)
+res_preds <- predict(model1, icu_test, type = 'response')
+pred <- as.numeric(res_preds > 0.5)
+pred2 <- as.factor(pred)
+status_test <- as.numeric(icu_test$thirty_day_mort)
+a <- confusionMatrix(pred2, as.factor(icu_test$thirty_day_mort))
+
+## confusion matrix
+fourfoldplot(a$table, color = c("cyan", "pink"),
+             conf.level = 0, margin = 1, main = "Confusion Matrix")
+
+# ROC Curve
+library(ggplot2)
+library(plotROC)
+library(MASS)
+library(pROC)
+
+##
+status_train <- as.numeric(icu_train$thirty_day_mort)
+pred_train <- as.numeric(predict(model1, icu_train) >0.5)
+auc1 <- round(auc(status_train, pred_train),4)
+auc2 <- round(auc(status_test, pred),4)
+
+
+df <- rbind(data.frame(predictor = predict(model1, icu_train),
+                       known.truth = icu_train$thirty_day_mort,
+                       model = "train"),
+            data.frame(predictor = predict(model1, icu_test),
+                       known.truth = icu_test$thirty_day_mort,
+                       model = "test"))
+
+ggplot(df, aes(d = known.truth, m = predictor, color = model)) +
+      geom_roc(n.cuts = 0) +
+      ggtitle(paste0('ROC Curve for Logistics Model '
+                      , '(Training & Testing AUC = ', auc1 ,' & ', auc2 ,')')) +
+      theme_minimal()
+```
+
+```{r, echo = T}
+
+
+
+```
