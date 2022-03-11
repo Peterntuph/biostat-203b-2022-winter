@@ -196,7 +196,8 @@ a <- confusionMatrix(pred2, as.factor(icu_test$thirty_day_mort))
 
 ## confusion matrix
 fourfoldplot(a$table, color = c("cyan", "pink"),
-             conf.level = 0, margin = 1, main = "Confusion Matrix")
+             conf.level = 0, margin = 1
+             , main = "Confusion Matrix for Logistics model")
 
 res_preds1 <- predict(fit, icu_test, type = 'response')
 status_test <- as.numeric(icu_test$thirty_day_mort) - 1
@@ -204,7 +205,8 @@ b <- confusionMatrix(res_preds1, as.factor(icu_test$thirty_day_mort))
 
 ## confusion matrix
 fourfoldplot(b$table, color = c("cyan", "pink"),
-             conf.level = 0, margin = 1, main = "Confusion Matrix")
+             conf.level = 0, margin = 1
+             , main = "Confusion Matrix for Random Forest")
 ```
 
 ```{r, echo = T}
