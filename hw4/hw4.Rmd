@@ -151,14 +151,34 @@ rm(icu_split)
 model1 <- glm(thirty_day_mort ~ ., data = icu_train
               , family = binomial(link="logit"))
 
+icu_test$first_careunit = as.factor(icu_test$first_careunit)
+icu_test$last_careunit = as.factor(icu_test$last_careunit)
+icu_test$gender = as.factor(icu_test$gender)
+icu_test$anchor_year_group = as.factor(icu_test$anchor_year_group)
+icu_test$admission_type = as.factor(icu_test$admission_type)
+icu_test$admission_location = as.factor(icu_test$admission_location)
+icu_test$discharge_location = as.factor(icu_test$discharge_location)
+icu_test$insurance = as.factor(icu_test$insurance)
+icu_test$language = as.factor(icu_test$language)
+icu_test$marital_status = as.factor(icu_test$marital_status)
+icu_test$ethnicity = as.factor(icu_test$ethnicity)
+
+icu_train$first_careunit = as.factor(icu_train$first_careunit)
+icu_train$last_careunit = as.factor(icu_train$last_careunit)
+icu_train$gender = as.factor(icu_train$gender)
+icu_train$anchor_year_group = as.factor(icu_train$anchor_year_group)
+icu_train$admission_type = as.factor(icu_train$admission_type)
+icu_train$admission_location = as.factor(icu_train$admission_location)
+icu_train$discharge_location = as.factor(icu_train$discharge_location)
+icu_train$insurance = as.factor(icu_train$insurance)
+icu_train$language = as.factor(icu_train$language)
+icu_train$marital_status = as.factor(icu_train$marital_status)
+icu_train$ethnicity = as.factor(icu_train$ethnicity)
+
 #Random Forest
 library(randomForest)
 
-fit <- randomForest(thirty_day_mort ~ ., data=icu_train
-                    , maxnodes=4
-                    , ntree=30
-                    , norm.votes=FALSE
-                    )
+fit <- randomForest(as.factor(thirty_day_mort) ~ ., data=icu_train, ntree = 300)
 ```
 
 3. Compare model prediction performance on the test set.
@@ -176,35 +196,18 @@ a <- confusionMatrix(pred2, as.factor(icu_test$thirty_day_mort))
 fourfoldplot(a$table, color = c("cyan", "pink"),
              conf.level = 0, margin = 1, main = "Confusion Matrix")
 
-# ROC Curve
-library(ggplot2)
-library(plotROC)
-library(MASS)
-library(pROC)
+res_preds1 <- predict(fit, icu_test, type = 'response')
+status_test <- as.numeric(icu_test$thirty_day_mort) - 1
+b <- confusionMatrix(res_preds1, as.factor(icu_test$thirty_day_mort))
 
-##
-status_train <- as.numeric(icu_train$thirty_day_mort)
-pred_train <- as.numeric(predict(model1, icu_train) >0.5)
-auc1 <- round(auc(status_train, pred_train),4)
-auc2 <- round(auc(status_test, pred),4)
-
-
-df <- rbind(data.frame(predictor = predict(model1, icu_train),
-                       known.truth = icu_train$thirty_day_mort,
-                       model = "train"),
-            data.frame(predictor = predict(model1, icu_test),
-                       known.truth = icu_test$thirty_day_mort,
-                       model = "test"))
-
-ggplot(df, aes(d = known.truth, m = predictor, color = model)) +
-      geom_roc(n.cuts = 0) +
-      ggtitle(paste0('ROC Curve for Logistics Model '
-                      , '(Training & Testing AUC = ', auc1 ,' & ', auc2 ,')')) +
-      theme_minimal()
+## confusion matrix
+fourfoldplot(b$table, color = c("cyan", "pink"),
+             conf.level = 0, margin = 1, main = "Confusion Matrix")
 ```
 
 ```{r, echo = T}
-
-
-
+Accuracy_log <- a$overall[1]
+Accuracy_rf <- b$overall[1]
+Accuracy_log
+Accuracy_rf
 ```
