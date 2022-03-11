@@ -124,6 +124,8 @@ From the plot above, it looks like the variables were imputed with a reasonable 
 
 For the correct Multiple Imputation strategy, we have to apply statistical tests in each imputed dataset and then pool the results to obtain summary estimates. For example, the descriptive statistics include pooling means and standard deviations; the difference in mean includes pooling independent t-tests; the relationship between the variables includes pooling logistic, Cox, or linear regression models. Thus, this is **not** a good idea to use just one imputed data set or to average multiple imputed data sets, but we can analyze each dataset and then pool their result together which is a more correct Multiple Imputation strategy.
 
+[Data analysis after Multiple Imputation](https://bookdown.org/mwheymans/bookmi/data-analysis-after-multiple-imputation.html)
+
 ## Q2. Predicting 30-day mortality
 
 Develop at least two analytic approaches for predicting the 30-day mortality of patients admitted to ICU using demographic information (gender, age, marital status, ethnicity), first lab measurements during ICU stay, and first vital measurements during ICU stay. For example, you can use (1) logistic regression (`glm()` function in base R or keras), (2) logistic regression with lasso penalty (glmnet or keras package), (3) random forest (randomForest package), or (4) neural network (keras package).
