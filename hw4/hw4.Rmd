@@ -49,7 +49,7 @@ MICE imputes missing data in a dataset (it should be dependent variable) through
 
 Step. 1 Replace the missing value with the mean  value observed in the data.
 
-Step. 2 The random forest (or linear regression) is used to predict each variable with other vairables and the correlation between some variables will improve.
+Step. 2 The random forest (or linear regression or Predictive Mean Matching) is used to predict each variable with other vairables and the correlation between some variables will improve.
 
 Step. 3 This process is continued until all specified variables have been imputed. The MICE finished and the correlation between some variables will be much closer to original data.
 
@@ -122,7 +122,7 @@ From the plot above, it looks like the variables were imputed with a reasonable 
 
 6. Choose one of the imputed data sets to be used in Q2. This is **not** a good idea to use just one imputed data set or to average multiple imputed data sets. Explain in a couple of sentences what the correct Multiple Imputation strategy is.
 
-
+For the correct Multiple Imputation strategy, we have to apply statistical tests in each imputed dataset and then pool the results to obtain summary estimates. For example, the descriptive statistics include pooling means and standard deviations; the difference in mean includes pooling independent t-tests; the relationship between the variables includes pooling logistic, Cox, or linear regression models. Thus, this is **not** a good idea to use just one imputed data set or to average multiple imputed data sets, but we can analyze each dataset and then pool their result together which is a more correct Multiple Imputation strategy.
 
 ## Q2. Predicting 30-day mortality
 
