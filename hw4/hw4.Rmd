@@ -100,7 +100,7 @@ completeData(miceObj)[3] %>% write_rds(file = "../hw4/icu_cohort_3.rds")
 plotDistributions(miceObj,vars='allNumeric')
 ```
 
-![plotDistributions](~/biostat-203b-2022-winter/hw4/hw4_plot/plotDistributions.png)
+![plotDistributions](/home/khyeh0816/biostat-203b-2022-winter/hw4/hw4_plot/plotDistributions.png)
 
 From the plot, we can see the imputed distributions compared to the original distribution for each variable. The red line is the density of the original, nonmissing data while the little black line are the density of the imputed values in each of imputed datasets. If they are not matched up, then it tells us that it was not Missing Completely at Random (MCAR). Thus, we can tell that only magnesium, calcium, glucose, body_temperture, heart_rate, and respiratory_rate look like MCAR.
 
@@ -108,7 +108,7 @@ From the plot, we can see the imputed distributions compared to the original dis
 plotCorrelations(miceObj,vars='allNumeric')
 ```
 
-![plotCorrelations](~/biostat-203b-2022-winter/hw4/hw4_plot/plotCorrelations.png)
+![plotCorrelations](/home/khyeh0816/biostat-203b-2022-winter/hw4/hw4_plot/plotCorrelations.png)
 
 From the plot of Convergence of Correlation, we can visualize how values between datasets converged over the iterations. 
 
@@ -116,7 +116,7 @@ From the plot of Convergence of Correlation, we can visualize how values between
 plotVarConvergence(miceObj,vars='allNumeric')
 ```
 
-![plotVarConvergence](~/biostat-203b-2022-winter/hw4/hw4_plot/plotVarConvergence.png)
+![plotVarConvergence](/home/khyeh0816/biostat-203b-2022-winter/hw4/hw4_plot/plotVarConvergence.png)
 
 From the plot of Center and Dispersion Convergence, we would like to make sure whether dataset converge to the true theoretical mean. It doesn’t look like this dataset had a convergence issue.
 
@@ -124,7 +124,7 @@ From the plot of Center and Dispersion Convergence, we would like to make sure w
 plotModelError(miceObj,vars='allNumeric')
 ```
 
-![plotModelError](~/biostat-203b-2022-winter/hw4/hw4_plot/plotModelError.png)
+![plotModelError](/home/khyeh0816/biostat-203b-2022-winter/hw4/hw4_plot/plotModelError.png)
 
 From the plot above, it looks like the variables were imputed with a reasonable degree of accuracy. However, for the respiratory_rate and mean_non_invasive_blood_pressure did not do well on the r-squared.
 
