@@ -77,7 +77,7 @@ colSums(is.na(icu_stay[,24:38]))
 
 4. Impute missing values by `miceRanger` (request $m=3$ data sets). This step is computational intensive. Make sure to save the imputation results as a file. Hint: Setting `max.depth=10` in the `miceRanger` function may cut some computing time.
 
-```{r, echo = T}
+```{r, eval=FALSE}
 seqTime <- system.time(
   miceObj <- miceRanger(
       icu_stay
@@ -88,7 +88,7 @@ seqTime <- system.time(
   )
 )
 miceObj
-miceObj %>% write_rds(file = "../hw4/icu_cohort.rds")
+miceObj %>% save(file = "../hw4/miceObj.RData")
 completeData(miceObj)[1] %>% write_rds(file = "../hw4/icu_cohort_1.rds")
 completeData(miceObj)[2] %>% write_rds(file = "../hw4/icu_cohort_2.rds")
 completeData(miceObj)[3] %>% write_rds(file = "../hw4/icu_cohort_3.rds")
@@ -96,27 +96,35 @@ completeData(miceObj)[3] %>% write_rds(file = "../hw4/icu_cohort_3.rds")
 
 5. Make imputation diagnostic plots and explain what they mean.
 
-```{r, echo = T}
+```{r, eval=FALSE}
 plotDistributions(miceObj,vars='allNumeric')
 ```
 
+![plotDistributions](~/biostat-203b-2022-winter/hw4/hw4_plot/plotDistributions.png)
+
 From the plot, we can see the imputed distributions compared to the original distribution for each variable. The red line is the density of the original, nonmissing data while the little black line are the density of the imputed values in each of imputed datasets. If they are not matched up, then it tells us that it was not Missing Completely at Random (MCAR). Thus, we can tell that only magnesium, calcium, glucose, body_temperture, heart_rate, and respiratory_rate look like MCAR.
 
-```{r, echo = T}
+```{r, eval=FALSE}
 plotCorrelations(miceObj,vars='allNumeric')
 ```
 
+![plotCorrelations](~/biostat-203b-2022-winter/hw4/hw4_plot/plotCorrelations.png)
+
 From the plot of Convergence of Correlation, we can visualize how values between datasets converged over the iterations. 
 
-```{r, echo = T}
+```{r, eval=FALSE}
 plotVarConvergence(miceObj,vars='allNumeric')
 ```
 
+![plotVarConvergence](~/biostat-203b-2022-winter/hw4/hw4_plot/plotVarConvergence.png)
+
 From the plot of Center and Dispersion Convergence, we would like to make sure whether dataset converge to the true theoretical mean. It doesn’t look like this dataset had a convergence issue.
 
-```{r, echo = T}
+```{r, eval=FALSE}
 plotModelError(miceObj,vars='allNumeric')
 ```
+
+![plotModelError](~/biostat-203b-2022-winter/hw4/hw4_plot/plotModelError.png)
 
 From the plot above, it looks like the variables were imputed with a reasonable degree of accuracy. However, for the respiratory_rate and mean_non_invasive_blood_pressure did not do well on the r-squared.
 
