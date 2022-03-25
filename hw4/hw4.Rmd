@@ -1,0 +1,225 @@
+---
+title: "Biostat 203B Homework 4"
+subtitle: Due Mar 18 @ 11:59PM
+output:
+  # ioslides_presentation: default
+  html_document:
+    toc: true
+    toc_depth: 4
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+```
+
+Display machine information:
+```{r}
+sessionInfo()
+```
+Load database libraries and the tidyverse frontend:
+```{r}
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(lubridate))
+suppressPackageStartupMessages(library(miceRanger))
+```
+
+## Q1. Missing data
+
+Through the Shiny app developed in HW3, we observe abundant missing values in the MIMIC-IV ICU cohort we created. In this question, we use multiple imputation to obtain a data set without missing values.
+
+0. Read following tutorials on the R package miceRanger for imputation: <https://github.com/farrellday/miceRanger>, <https://cran.r-project.org/web/packages/miceRanger/vignettes/miceAlgorithm.html>.
+
+    A more thorough book treatment of the practical imputation strategies is the book [*_Flexible Imputation of Missing Data_*](https://stefvanbuuren.name/fimd/) by Stef van Buuren. 
+
+1. Explain the jargon MCAR, MAR, and MNAR.
+
+* MCAR: If the data said to be MCAR, it stands for Missing Completely At Random (MCAR). This means that the missing values of data are unrelated to the data itself. In other words, the probability of being missing is uniform distributed and completely independent both of observable variables and of unobservable variables, and occur entirely at random.
+
+* MAR: If the data said to be MAR, it stands for Missing At Random (MAR). This means that the missing values of data are the same only within groups defined by the observed data. In other words, the probability of being missing is not random, but where missingness can be fully accounted for by variables.
+
+* MNAR: If the data said to be MNAR, it stands for Missing Not At Random (MNAR). This means that the data data that is neither MAR nor MCAR. MNAR means that the probability of being missing varies for reasons that are unknown to us. 
+
+Reference:
+* [Concepts of MCAR, MAR and MNAR](https://stefvanbuuren.name/fimd/sec-MCAR.html)
+* [Concepts in incomplete data](https://stefvanbuuren.name/fimd/sec-idconcepts.html#sec:notation)
+
+2. Explain in a couple of sentences how the Multiple Imputation by Chained Equations (MICE) work.
+
+MICE imputes missing data in a dataset (it should be dependent variable) through an iterative series of predictive models. In each iteration, each specified variable in the dataset is imputed using the other variables in the dataset. These iterations should be run until it appears that convergence has been met and all specified variables have been imputed. 
+
+Step. 1 Replace the missing value with the mean  value observed in the data.
+
+Step. 2 The random forest (or linear regression or Predictive Mean Matching) is used to predict each variable with other vairables and the correlation between some variables will improve.
+
+Step. 3 This process is continued until all specified variables have been imputed. The MICE finished and the correlation between some variables will be much closer to original data.
+
+3. Perform a data quality check of the ICU stays data. Discard variables with substantial missingness, say >5000 `NA`s. Replace apparent data entry errors by `NA`s.
+
+```{r, echo = T}
+icu_stay <- readRDS("../hw3/mimiciv_shiny/icu_cohort.rds")
+icu_stay$thirty_day_mort <- 
+  ifelse(is.na(icu_stay$thirty_day_mort) == T, 0, icu_stay$thirty_day_mort)
+
+summary(icu_stay)
+
+#From the summary table, we decide to drop the variables with substantial missingness, say >5000 NAs
+#drop "deathtime", "edregtime", "edouttime", "dod"
+icu_stay <- icu_stay %>% 
+  select(-c("deathtime", "edregtime", "edouttime", "dod"))
+
+#replace lab and vital measurements to NA
+for (var in colnames(icu_stay[,24:38])){
+ icu_stay[[var]][icu_stay[[var]] %in% boxplot.stats(icu_stay[[var]])$out] <- NA
+}
+
+colSums(is.na(icu_stay[,24:38]))
+```
+
+4. Impute missing values by `miceRanger` (request $m=3$ data sets). This step is computational intensive. Make sure to save the imputation results as a file. Hint: Setting `max.depth=10` in the `miceRanger` function may cut some computing time.
+
+```{r, eval=FALSE}
+seqTime <- system.time(
+  miceObj <- miceRanger(
+      icu_stay
+    , m=3
+    , returnModels = FALSE
+    , verbose=FALSE
+    , max.depth=10
+  )
+)
+miceObj
+miceObj %>% save(file = "../hw4/miceObj.RData")
+completeData(miceObj)[1] %>% write_rds(file = "../hw4/icu_cohort_1.rds")
+completeData(miceObj)[2] %>% write_rds(file = "../hw4/icu_cohort_2.rds")
+completeData(miceObj)[3] %>% write_rds(file = "../hw4/icu_cohort_3.rds")
+```
+
+5. Make imputation diagnostic plots and explain what they mean.
+
+```{r, eval=FALSE}
+plotDistributions(miceObj,vars='allNumeric')
+```
+
+![plotDistributions](/home/khyeh0816/biostat-203b-2022-winter/hw4/hw4_plot/plotDistributions.png)
+
+From the plot, we can see the imputed distributions compared to the original distribution for each variable. The red line is the density of the original, nonmissing data while the little black line are the density of the imputed values in each of imputed datasets. If they are not matched up, then it tells us that it was not Missing Completely at Random (MCAR). Thus, we can tell that only magnesium, calcium, glucose, body_temperture, heart_rate, and respiratory_rate look like MCAR.
+
+```{r, eval=FALSE}
+plotCorrelations(miceObj,vars='allNumeric')
+```
+
+![plotCorrelations](/home/khyeh0816/biostat-203b-2022-winter/hw4/hw4_plot/plotCorrelations.png)
+
+From the plot of Convergence of Correlation, we can visualize how values between datasets converged over the iterations. 
+
+```{r, eval=FALSE}
+plotVarConvergence(miceObj,vars='allNumeric')
+```
+
+![plotVarConvergence](/home/khyeh0816/biostat-203b-2022-winter/hw4/hw4_plot/plotVarConvergence.png)
+
+From the plot of Center and Dispersion Convergence, we would like to make sure whether dataset converge to the true theoretical mean. It doesn’t look like this dataset had a convergence issue.
+
+```{r, eval=FALSE}
+plotModelError(miceObj,vars='allNumeric')
+```
+
+![plotModelError](/home/khyeh0816/biostat-203b-2022-winter/hw4/hw4_plot/plotModelError.png)
+
+From the plot above, it looks like the variables were imputed with a reasonable degree of accuracy. However, for the respiratory_rate and mean_non_invasive_blood_pressure did not do well on the r-squared.
+
+6. Choose one of the imputed data sets to be used in Q2. This is **not** a good idea to use just one imputed data set or to average multiple imputed data sets. Explain in a couple of sentences what the correct Multiple Imputation strategy is.
+
+For the correct Multiple Imputation strategy, we have to apply statistical tests in each imputed dataset and then pool the results to obtain summary estimates. For example, the descriptive statistics include pooling means and standard deviations; the difference in mean includes pooling independent t-tests; the relationship between the variables includes pooling logistic, Cox, or linear regression models. Thus, this is **not** a good idea to use just one imputed data set or to average multiple imputed data sets, but we can analyze each dataset and then pool their result together which is a more correct Multiple Imputation strategy.
+
+[Data analysis after Multiple Imputation](https://bookdown.org/mwheymans/bookmi/data-analysis-after-multiple-imputation.html)
+
+## Q2. Predicting 30-day mortality
+
+Develop at least two analytic approaches for predicting the 30-day mortality of patients admitted to ICU using demographic information (gender, age, marital status, ethnicity), first lab measurements during ICU stay, and first vital measurements during ICU stay. For example, you can use (1) logistic regression (`glm()` function in base R or keras), (2) logistic regression with lasso penalty (glmnet or keras package), (3) random forest (randomForest package), or (4) neural network (keras package).
+
+1. Partition data into 80% training set and 20% test set. Stratify partitioning according the 30-day mortality status.
+
+```{r, echo = T}
+library(rsample)
+icu_cohort_2 <- readRDS("~/biostat-203b-2022-winter/hw4/icu_cohort_2.rds")
+
+#Data split
+set.seed(12345)
+icu_split <- initial_split(icu_cohort_2$Dataset_2, prop = 0.8
+                           , strata = thirty_day_mort)
+icu_train <- icu_split %>% training()
+icu_test <- icu_split %>% testing()
+rm(icu_cohort_2)
+rm(icu_split)
+```
+
+2. Train the models using the training set.
+
+```{r, echo = T}
+#Logistics model
+model1 <- glm(thirty_day_mort ~ ., data = icu_train
+              , family = binomial(link="logit"))
+
+icu_test$first_careunit = as.factor(icu_test$first_careunit)
+icu_test$last_careunit = as.factor(icu_test$last_careunit)
+icu_test$gender = as.factor(icu_test$gender)
+icu_test$anchor_year_group = as.factor(icu_test$anchor_year_group)
+icu_test$admission_type = as.factor(icu_test$admission_type)
+icu_test$admission_location = as.factor(icu_test$admission_location)
+icu_test$discharge_location = as.factor(icu_test$discharge_location)
+icu_test$insurance = as.factor(icu_test$insurance)
+icu_test$language = as.factor(icu_test$language)
+icu_test$marital_status = as.factor(icu_test$marital_status)
+icu_test$ethnicity = as.factor(icu_test$ethnicity)
+
+icu_train$first_careunit = as.factor(icu_train$first_careunit)
+icu_train$last_careunit = as.factor(icu_train$last_careunit)
+icu_train$gender = as.factor(icu_train$gender)
+icu_train$anchor_year_group = as.factor(icu_train$anchor_year_group)
+icu_train$admission_type = as.factor(icu_train$admission_type)
+icu_train$admission_location = as.factor(icu_train$admission_location)
+icu_train$discharge_location = as.factor(icu_train$discharge_location)
+icu_train$insurance = as.factor(icu_train$insurance)
+icu_train$language = as.factor(icu_train$language)
+icu_train$marital_status = as.factor(icu_train$marital_status)
+icu_train$ethnicity = as.factor(icu_train$ethnicity)
+
+#Random Forest
+library(randomForest)
+
+fit <- randomForest(as.factor(thirty_day_mort) ~ ., data=icu_train, ntree = 300)
+```
+
+3. Compare model prediction performance on the test set.
+
+```{r, echo = T}
+# Probability and class preds
+library(caret)
+res_preds <- predict(model1, icu_test, type = 'response')
+pred <- as.numeric(res_preds > 0.5)
+pred2 <- as.factor(pred)
+status_test <- as.numeric(icu_test$thirty_day_mort)
+a <- confusionMatrix(pred2, as.factor(icu_test$thirty_day_mort))
+
+## confusion matrix
+fourfoldplot(a$table, color = c("cyan", "pink"),
+             conf.level = 0, margin = 1
+             , main = "Confusion Matrix for Logistics model")
+
+res_preds1 <- predict(fit, icu_test, type = 'response')
+status_test <- as.numeric(icu_test$thirty_day_mort) - 1
+b <- confusionMatrix(res_preds1, as.factor(icu_test$thirty_day_mort))
+
+## confusion matrix
+fourfoldplot(b$table, color = c("cyan", "pink"),
+             conf.level = 0, margin = 1
+             , main = "Confusion Matrix for Random Forest")
+```
+
+```{r, echo = T}
+Accuracy_log <- a$overall[1]
+Accuracy_rf <- b$overall[1]
+Accuracy_log
+Accuracy_rf
+```
